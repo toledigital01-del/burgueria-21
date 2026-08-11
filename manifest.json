@@ -1,0 +1,16 @@
+{
+  "name": "Burgueria 21",
+  "short_name": "Burgueria 21",
+  "description": "Hamburgueria artesanal na chapa. Monte o seu burger e peça pela internet.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBF3E7",
+  "theme_color": "#FBF3E7",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

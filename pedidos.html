@@ -197,6 +197,7 @@ const PROXIMO = { novo:"preparo", preparo:"pronto", pronto:"entregue" };
 const ROTULO_ACAO = { novo:"Aceitar pedido", preparo:"Marcar como pronto", pronto:"Marcar como entregue" };
 
 const MSG_PADRAO = {
+  novo:     "Oi {nome}! Recebemos seu pedido {codigo}. Já já confirmamos por aqui. 👍",
   preparo:  "Oi {nome}! Recebemos seu pedido {codigo} e já colocamos na chapa. 🍔",
   pronto:   "{nome}, seu pedido {codigo} está pronto! {entrega}",
   entregue: "Pedido {codigo} entregue. Valeu pela preferência! 🙏",
@@ -272,25 +273,24 @@ function cicloAlerta(t0){
 
 function tocarAlerta(ciclos){
   if(!ctx || !somLigado) return;
-  const n = ciclos || 4;                  // 4 ciclos ≈ 10 segundos
+  const n = ciclos || 2;                  // 2 ciclos ≈ 5 segundos
   const t = ctx.currentTime + 0.05;
   for(let i=0;i<n;i++) cicloAlerta(t + i*2.6);
   if(navigator.vibrate) navigator.vibrate([400,180,400,180,600]);
 }
 
-let timerAlarme = null;
+/* Toca só quando o pedido chega — 2 rodadas e pronto. Não repete
+   quando muda de status; o título piscando avisa em silêncio
+   enquanto o pedido novo não for aceito. */
 function iniciarAlarme(){
   if(alarmeAtivo) return;
   alarmeAtivo = true;
-  tocarAlerta(4);
-  // insiste a cada 20s enquanto houver pedido novo sem atender
-  timerAlarme = setInterval(()=>{ if(contar("novo")>0) tocarAlerta(4); else pararAlarme(); }, 20000);
+  tocarAlerta(2);
   piscarTitulo();
   notificar();
 }
 function pararAlarme(){
   alarmeAtivo = false;
-  clearInterval(timerAlarme); timerAlarme = null;
   clearInterval(timerTitulo); timerTitulo = null;
   document.title = tituloOriginal;
 }

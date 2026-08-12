@@ -45,6 +45,100 @@ h1,h2,h3{line-height:1.25}
 .estado{display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--ok);white-space:nowrap}
 @media(max-width:700px){.estado{font-size:0;gap:0}.estado span{font-size:15px}}
 
+.ic-btn{width:42px;height:42px;border-radius:11px;border:1.5px solid var(--line);background:#fff;font-size:18px;
+  display:flex;align-items:center;justify-content:center;position:relative;flex:none;transition:.14s}
+.ic-btn:hover{background:#F5F2ED}
+.ic-btn.mudo{background:#fdf0ee;border-color:#f6dcd8}
+.ic-btn .bad{position:absolute;top:-5px;right:-5px;background:var(--brand);color:#fff;font-size:10.5px;font-weight:800;
+  border-radius:99px;min-width:19px;height:19px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+
+/* ---------- PEDIDOS ---------- */
+:root{--pd-novo:#E8A33D;--pd-novo-bg:#FFF8EC;--pd-preparo:#2F6FED;--pd-preparo-bg:#EEF3FE;--pd-pronto:#3E8E4E;--pd-pronto-bg:#EDF6EE;--pd-fim:#8A8078;--pd-zap:#25D366}
+.abas{padding:0 0 12px}
+.abas-in{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.abas-in::-webkit-scrollbar{display:none}
+.aba{display:flex;align-items:center;gap:7px;white-space:nowrap;border:1.5px solid var(--line);background:#fff;
+  border-radius:99px;padding:9px 16px;font-size:13.5px;font-weight:700;color:var(--soft);transition:.14s}
+.aba .n{background:#EFEAE2;color:var(--soft);border-radius:99px;min-width:21px;padding:1px 7px;font-size:11.5px;font-weight:800}
+.aba.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.aba.on .n{background:rgba(255,255,255,.22);color:#fff}
+.aba.tem-novo{border-color:var(--pd-novo);background:var(--pd-novo-bg);color:#8a5f14}
+.aba.tem-novo .n{background:var(--pd-novo);color:#3a2408}
+.aba.on.tem-novo{background:var(--pd-novo);color:#3a2408;border-color:var(--pd-novo)}
+.aba.on.tem-novo .n{background:rgba(0,0,0,.18);color:#3a2408}
+.busca{margin-bottom:14px}
+.busca input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff}
+.busca input:focus{outline:none;border-color:var(--gold)}
+.lista{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:900px){.lista{grid-template-columns:1fr 1fr}}
+.pd{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;
+  border-left:5px solid var(--pd-fim);transition:.16s}
+.pd.s-novo{border-left-color:var(--pd-novo)}
+.pd.s-preparo{border-left-color:var(--pd-preparo)}
+.pd.s-pronto{border-left-color:var(--pd-pronto)}
+.pd.piscando{animation:chama 1.5s ease-in-out infinite;border-left-color:var(--pd-novo)}
+@keyframes chama{0%,100%{box-shadow:0 4px 16px rgba(50,35,25,.07)}50%{box-shadow:0 0 0 4px rgba(232,163,61,.35),0 4px 20px rgba(232,163,61,.3)}}
+.pd-h{display:flex;align-items:flex-start;gap:11px;padding:14px 15px;cursor:pointer}
+.pd-h .dot{width:11px;height:11px;border-radius:50%;flex:none;margin-top:5px;background:var(--pd-fim)}
+.s-novo .pd-h .dot{background:var(--pd-novo)}
+.s-preparo .pd-h .dot{background:var(--pd-preparo)}
+.s-pronto .pd-h .dot{background:var(--pd-pronto)}
+.pd-h .tt{flex:1;min-width:0}
+.pd-h .tt b{font-size:16.5px;font-weight:800;display:block}
+.pd-h .tt .sub{font-size:12.5px;color:var(--soft);margin-top:3px}
+.pd-h .rt{text-align:right;flex:none}
+.pd-h .rt .vl{font-size:17px;font-weight:800;white-space:nowrap}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 10px;font-size:11.5px;font-weight:700;margin-top:6px}
+.tag.ent{background:var(--pd-preparo-bg);color:var(--pd-preparo)}
+.tag.ret{background:#F3EFE9;color:#6d6259}
+.seta{color:var(--soft);font-size:15px;transition:.2s;flex:none;margin-top:3px}
+.pd.aberto .seta{transform:rotate(180deg)}
+.pd-b{display:none;padding:0 15px 15px;border-top:1px dashed var(--line);margin-top:2px;padding-top:13px}
+.pd.aberto .pd-b{display:block}
+.fone{display:flex;align-items:center;gap:10px;background:#FAF8F5;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:11px}
+.fone .num{flex:1;font-size:14.5px;font-weight:600;letter-spacing:.2px}
+.zap-btn{background:var(--pd-zap);color:#fff;width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;transition:.14s}
+.zap-btn:hover{filter:brightness(.94)}
+.zap-btn svg{width:22px;height:22px;fill:#fff}
+.end{display:flex;gap:8px;font-size:13.5px;color:var(--soft);line-height:1.5;margin-bottom:12px}
+.end b{color:var(--ink);font-weight:600}
+.itens{border-top:1px solid var(--line);padding-top:11px}
+.it{display:flex;gap:11px;padding:8px 0;border-bottom:1px solid #F2EEE8}
+.it:last-child{border-bottom:none}
+.it .q{background:#EFEAE2;color:var(--ink);font-weight:800;font-size:12.5px;border-radius:8px;min-width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;flex:none;padding:0 6px}
+.it .nm{flex:1;min-width:0}
+.it .nm b{font-size:14.5px;font-weight:700;display:block}
+.it .nm .cfg{font-size:12.5px;color:var(--soft);margin-top:2px;line-height:1.45}
+.it .nm .obs{font-size:12.5px;color:#9a5b12;background:#FFF6E8;border-radius:7px;padding:4px 8px;margin-top:5px;display:inline-block}
+.it .vl{font-weight:700;font-size:14px;white-space:nowrap}
+.somas{margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+.sm{display:flex;justify-content:space-between;font-size:13.5px;color:var(--soft);margin:4px 0}
+.sm.desc{color:var(--pd-pronto);font-weight:600}
+.sm.tot{color:var(--ink);font-weight:800;font-size:18px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.pag{display:inline-flex;align-items:center;gap:6px;background:#F3EFE9;border-radius:9px;padding:6px 11px;font-size:12.5px;font-weight:700;margin-top:10px}
+.acoes{display:flex;gap:9px;margin-top:14px}
+.ac{flex:1;border-radius:12px;padding:14px;font-weight:800;font-size:15px;text-align:center;transition:.14s}
+.ac:active{transform:scale(.98)}
+.ac-p{background:var(--ink);color:#fff}
+.ac-p:hover{background:#000}
+.ac-g{background:#fff;border:1.5px solid var(--line);color:var(--soft);flex:0 0 auto;padding:14px 18px}
+.ac-g:hover{border-color:#cfc7bb;color:var(--ink)}
+.ac-ok{background:var(--pd-pronto);color:#fff}
+.ac-prep{background:var(--pd-preparo);color:#fff}
+.pd-vazio{text-align:center;padding:60px 24px;color:var(--soft);grid-column:1/-1}
+.pd-vazio .em{font-size:46px;margin-bottom:12px;opacity:.55}
+.pd-vazio b{display:block;color:var(--ink);font-size:16.5px;margin-bottom:5px}
+.somOff{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:80;width:min(94%,540px);
+  background:var(--ink);color:#fff;border-radius:14px;padding:14px 16px;display:none;align-items:center;gap:12px;
+  box-shadow:0 12px 34px rgba(0,0,0,.32)}
+.somOff.on{display:flex}
+.somOff .tx{flex:1;font-size:13.5px;line-height:1.45}
+.somOff .tx b{display:block;font-size:14.5px;margin-bottom:2px}
+.somOff button{background:var(--pd-novo);color:#3a2408;font-weight:800;border-radius:10px;padding:11px 16px;font-size:14px;flex:none}
+.erroPed{background:#FDF0EE;border:1px solid #F3D9D4;color:#8b3226;border-radius:12px;padding:12px 15px;font-size:13.5px;display:none;margin-bottom:12px}
+.erroPed.on{display:block}
+
 /* ---------- LAYOUT ---------- */
 .wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:238px 1fr;gap:20px;padding:20px 16px 120px}
 @media(max-width:860px){.wrap{grid-template-columns:1fr;padding-bottom:96px}}
@@ -250,8 +344,8 @@ textarea.in{min-height:104px;resize:vertical;line-height:1.55}
     </div>
     <div class="sp"></div>
     <span class="estado" id="estado">✅ Publicado</span>
+    <button class="ic-btn" id="btnSom" onclick="alternarSom()" title="Som de aviso de pedido novo">🔔</button>
     <button class="btn btn-g" onclick="verSite()">Ver site</button>
-    <button class="btn btn-p" onclick="location.href='pedidos.html'">Pedidos</button>
   </div>
 </header>
 
@@ -277,6 +371,11 @@ textarea.in{min-height:104px;resize:vertical;line-height:1.55}
 </div>
 
 <div class="tst" id="tst"></div>
+
+<div class="somOff" id="somOff">
+  <div class="tx"><b>Ative o aviso sonoro</b>Toque uma vez para o navegador deixar tocar o alerta quando entrar pedido.</div>
+  <button onclick="ligarSom()">Ativar</button>
+</div>
 
 <button class="tour-fab" id="tourFab" onclick="iniciarTour(false)"><span>🎓</span><span>Tutorial</span></button>
 <div class="tour-hole" id="tourHole"></div>
@@ -437,6 +536,7 @@ const feitas = () => TAREFAS.filter(t=>t.ok()).length;
 ================================================================== */
 const MENUS = [
   {id:"inicio",     ic:"🏠", t:"Início"},
+  {id:"pedidos",    ic:"🔔", t:"Pedidos"},
   {id:"categorias", ic:"📂", t:"Categorias"},
   {id:"produtos",   ic:"🍔", t:"Produtos"},
   {id:"opcoes",     ic:"⚙️", t:"Opções e extras"},
@@ -446,8 +546,10 @@ const MENUS = [
 function pintarMenu(){
   document.getElementById("side").innerHTML = MENUS.map(m=>{
     const pend = TAREFAS.some(t=>t.tela===m.id && !t.ok());
+    const nNovos = m.id==="pedidos" ? contarPed("novo") : 0;
+    const badge = nNovos ? `<span class="pend" style="background:var(--brand)">${nNovos}</span>` : pend ? `<span class="pend">!</span>` : "";
     return `<button class="nav-i ${TELA===m.id?"on":""}" onclick="go('${m.id}')" style="position:relative">
-      <span class="ic">${m.ic}</span><span>${m.t}</span>${pend?`<span class="pend">!</span>`:""}</button>`;
+      <span class="ic">${m.ic}</span><span>${m.t}</span>${badge}</button>`;
   }).join("");
 }
 function go(t, sub){
@@ -489,9 +591,10 @@ function pintar(){
   const m = document.getElementById("main");
   m.innerHTML = ({
     inicio:telaInicio, config:telaConfig, categorias:telaCategorias,
-    produtos:telaProdutos, opcoes:telaOpcoes, publicar:telaPublicar
+    produtos:telaProdutos, opcoes:telaOpcoes, publicar:telaPublicar, pedidos:telaPedidos
   })[TELA]();
   pintarTopo();
+  if(TELA==="pedidos") pintarPedidosLista();
 }
 
 /* ---------- INÍCIO ---------- */
@@ -574,6 +677,22 @@ function telaLoja(){
     <div class="f"><label>Texto</label>
       <textarea class="in" placeholder="Conte como é o seu produto, o que usa de ingrediente, há quanto tempo existe..." oninput="set('loja.sobre',this.value)">${esc(l.sobre)}</textarea>
       <div class="hint">Deixe uma linha em branco pra separar parágrafos.</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Mensagens de WhatsApp por status</h2>
+    <div class="sub">Texto enviado ao clicar no ícone de WhatsApp do pedido, conforme o status. Deixe em branco pra só abrir a conversa, sem mensagem.</div>
+    <div class="guia"><span class="gi">💡</span><div>
+      Você pode usar <b>{nome}</b>, <b>{codigo}</b>, <b>{total}</b> e <b>{entrega}</b> — o sistema troca pelos dados reais do pedido.
+    </div></div>
+    <div class="r2">
+      ${[["novo","Novos"],["preparo","Em preparo"],["pronto","Prontos"],["entregue","Finalizados"],["recusado","Recusados"]].map(([k,t])=>`
+      <div class="f"><label>${t}</label>
+        <textarea class="in" style="min-height:64px" oninput="setMsg('${k}',this.value)"
+          placeholder="Opcional — ex: mensagem para este status">${esc(msgAtual(k))}</textarea></div>`).join("")}
+    </div>
+    <button class="btn btn-g btn-sm" onclick="DB.mensagens={};salvar();pintar();toast('Textos voltaram ao padrão')">
+      Voltar aos textos padrão</button>
   </div>`;
 }
 
@@ -799,7 +918,8 @@ function editarProd(i, catPadrao){
         <div class="pv" id="pPv">${imgTemp?`<img src="${esc(imgTemp)}">`:"📷"}</div>
         <div class="uc">
           <p>Foto boa aumenta muito a venda. Tire de cima, com luz natural.</p>
-          <label class="btn btn-g btn-sm" style="display:inline-block">Escolher foto
+          <p style="font-size:11.5px;color:var(--soft);margin-top:2px">Tamanho ideal: <b>800×800px</b>, quadrada · PNG ou JPG</p>
+          <label class="btn btn-g btn-sm" style="display:inline-block;margin-top:6px">Escolher foto
             <input type="file" accept="image/*" hidden onchange="pegarImagem(this,700,v=>{imgTemp=v;document.getElementById('pPv').innerHTML='<img src=\\''+v+'\\'>'})">
           </label>
           <button class="btn btn-dg btn-sm" style="margin-left:6px" onclick="imgTemp='';document.getElementById('pPv').innerHTML='📷'">Sem foto</button>
@@ -1081,21 +1201,6 @@ function telaPublicar(){
   </div>
 
   <div class="card">
-    <h2>Mensagens automáticas do WhatsApp</h2>
-    <div class="sub">No painel de pedidos, quando você muda o status, aparece um botão pra avisar o cliente com esse texto pronto.</div>
-    <div class="guia"><span class="gi">💡</span><div>
-      Você pode usar <b>{nome}</b>, <b>{codigo}</b>, <b>{total}</b> e <b>{entrega}</b> — o sistema troca pelos dados reais do pedido.
-    </div></div>
-    ${[["preparo","Quando aceita o pedido"],["pronto","Quando fica pronto"],
-       ["entregue","Quando entrega"],["recusado","Quando recusa"]].map(([k,t])=>`
-      <div class="f"><label>${t}</label>
-        <textarea class="in" style="min-height:64px" oninput="setMsg('${k}',this.value)"
-          placeholder="Deixe em branco pra só abrir a conversa">${esc(msgAtual(k))}</textarea></div>`).join("")}
-    <button class="btn btn-g btn-sm" onclick="DB.mensagens={};salvar();pintar();toast('Textos voltaram ao padrão')">
-      Voltar aos textos padrão</button>
-  </div>
-
-  <div class="card">
     <h2>Fazer uma cópia de segurança</h2>
     <div class="sub">Guarde o arquivo do seu cardápio. Se trocar de computador ou limpar o navegador, é só carregar de volta.</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -1107,6 +1212,7 @@ function telaPublicar(){
   </div>`;
 }
 const MSG_PADRAO = {
+  novo:     "Oi {nome}! Recebemos seu pedido {codigo}. Já já confirmamos por aqui. 👍",
   preparo:  "Oi {nome}! Recebemos seu pedido {codigo} e já colocamos na chapa. 🍔",
   pronto:   "{nome}, seu pedido {codigo} está pronto! {entrega}",
   entregue: "Pedido {codigo} entregue. Valeu pela preferência! 🙏",
@@ -1208,6 +1314,301 @@ function fecharTour(concluiu){
   }
 }
 window.addEventListener("resize", ()=>{ if(tourPassos.length && document.getElementById("tourBubble").style.display==="block") desenharTour(document.querySelector(tourPassos[tourIdx]?.sel||""), tourPassos[tourIdx]); });
+
+/* ==================================================================
+   PEDIDOS — chega em tempo real, com aviso sonoro só na chegada.
+   Roda o tempo todo (mesmo fora da tela Pedidos) pra não perder
+   nenhum pedido enquanto o dono está editando o cardápio.
+================================================================== */
+const PED_ABAS = [
+  {id:"novo",    t:"Novos",       cor:"pd-novo"},
+  {id:"preparo", t:"Em preparo",  cor:"pd-preparo"},
+  {id:"pronto",  t:"Prontos",     cor:"pd-pronto"},
+  {id:"fim",     t:"Finalizados", cor:"pd-fim"},
+];
+const PED_PROXIMO = { novo:"preparo", preparo:"pronto", pronto:"entregue" };
+const PED_ROTULO_ACAO = { novo:"Aceitar pedido", preparo:"Marcar como pronto", pronto:"Marcar como entregue" };
+
+let PEDIDOS = [];
+let pedAba = "novo";
+let pedAbertos = {};
+let pedBusca = "";
+let pedVistos = new Set(JSON.parse(localStorage.getItem("bb_vistos") || "[]"));
+let somLigado = localStorage.getItem("bb_som") !== "0";
+let pedAudioOk = false, pedCtx = null, pedAlarmeAtivo = false, pedTituloOriginal = document.title;
+
+function pedFaz(min){
+  if(min<1) return "agora";
+  if(min<60) return `há ${Math.round(min)} min`;
+  const h=Math.floor(min/60); return `há ${h}h${String(Math.round(min%60)).padStart(2,"0")}`;
+}
+
+/* ---------- SOM ---------- */
+function ligarSom(){
+  try{
+    pedCtx = pedCtx || new (window.AudioContext||window.webkitAudioContext)();
+    pedCtx.resume();
+    pedAudioOk = true;
+    document.getElementById("somOff").classList.remove("on");
+    pedTocarAlerta(1);
+    toast("Som ativado");
+  }catch(e){ toast("Este navegador não deixou ativar o som"); }
+  pintarSomBtn();
+}
+function alternarSom(){
+  somLigado = !somLigado;
+  localStorage.setItem("bb_som", somLigado?"1":"0");
+  if(somLigado){ if(!pedAudioOk) ligarSom(); else { pedTocarAlerta(1); toast("Som ligado"); } }
+  else { pedPararAlarme(); toast("Som desligado"); }
+  pintarSomBtn();
+}
+function pintarSomBtn(){
+  const b = document.getElementById("btnSom"); if(!b) return;
+  const n = contarPed("novo");
+  b.classList.toggle("mudo", !somLigado);
+  b.innerHTML = (somLigado?"🔔":"🔕") + (n?`<span class="bad">${n}</span>`:"");
+}
+
+/* Uma "badalada" com corpo — duas vozes afinadas + brilho, cauda longa. */
+function pedBadalada(t0, base){
+  const g = pedCtx.createGain();
+  g.connect(pedCtx.destination);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.55, t0 + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.15);
+  [[base,0.9,"sine"],[base*2,0.42,"sine"],[base*2.997,0.16,"triangle"]].forEach(([f,v,tipo])=>{
+    const o = pedCtx.createOscillator(), og = pedCtx.createGain();
+    o.type = tipo; o.frequency.setValueAtTime(f, t0);
+    og.gain.setValueAtTime(v, t0);
+    og.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.1);
+    o.connect(og); og.connect(g);
+    o.start(t0); o.stop(t0 + 1.2);
+  });
+}
+function pedCicloAlerta(t0){
+  pedBadalada(t0,        784);
+  pedBadalada(t0 + 0.34, 988);
+  pedBadalada(t0 + 0.68, 1319);
+  pedBadalada(t0 + 1.5,  988);
+  pedBadalada(t0 + 1.84, 1319);
+}
+function pedTocarAlerta(ciclos){
+  if(!pedCtx || !somLigado) return;
+  const n = ciclos || 2;
+  const t = pedCtx.currentTime + 0.05;
+  for(let i=0;i<n;i++) pedCicloAlerta(t + i*2.6);
+  if(navigator.vibrate) navigator.vibrate([400,180,400,180,600]);
+}
+/* Toca só quando o pedido chega — 2 rodadas e pronto. Não repete
+   quando muda de status; o título piscando avisa em silêncio
+   enquanto o pedido novo não for aceito. */
+function pedIniciarAlarme(){
+  if(pedAlarmeAtivo) return;
+  pedAlarmeAtivo = true;
+  pedTocarAlerta(2);
+  pedPiscarTitulo();
+  pedNotificar();
+}
+function pedPararAlarme(){
+  pedAlarmeAtivo = false;
+  clearInterval(pedTimerTitulo); pedTimerTitulo = null;
+  document.title = pedTituloOriginal;
+}
+let pedTimerTitulo = null;
+function pedPiscarTitulo(){
+  if(pedTimerTitulo) return;
+  let a = false;
+  pedTimerTitulo = setInterval(()=>{
+    const n = contarPed("novo");
+    if(!n){ document.title = pedTituloOriginal; clearInterval(pedTimerTitulo); pedTimerTitulo=null; return; }
+    document.title = (a = !a) ? `🔔 (${n}) PEDIDO NOVO!` : pedTituloOriginal;
+  }, 900);
+}
+function pedNotificar(){
+  try{
+    if(!("Notification" in window)) return;
+    if(Notification.permission === "granted"){
+      new Notification("Pedido novo!", { body:"Entrou um pedido no painel.", icon:"icon-192.png", tag:"pedido" });
+    } else if(Notification.permission !== "denied"){
+      Notification.requestPermission();
+    }
+  }catch(e){}
+}
+
+/* ---------- DADOS ---------- */
+async function carregarPedidos(primeira){
+  try{
+    const antes = new Set(PEDIDOS.map(p=>p.id));
+    PEDIDOS = await NUVEM.listarPedidos() || [];
+    if(!primeira){
+      const novos = PEDIDOS.filter(p => p.status==="novo" && !antes.has(p.id));
+      if(novos.length) pedIniciarAlarme();
+    } else if(contarPed("novo") > 0){
+      pedIniciarAlarme();
+    }
+    pintarMenu();
+    pintarSomBtn();
+    if(TELA==="pedidos") pintarPedidosLista();
+  }catch(e){ /* silencioso: tenta de novo no próximo ciclo */ }
+}
+function daAbaPed(p){ return (p.status==="entregue"||p.status==="recusado") ? "fim" : p.status; }
+function contarPed(id){ return PEDIDOS.filter(p=>daAbaPed(p)===id).length; }
+
+/* ---------- AÇÕES ---------- */
+async function pedAvancar(id){
+  const p = PEDIDOS.find(x=>x.id===id); if(!p) return;
+  const novo = PED_PROXIMO[p.status]; if(!novo) return;
+  p.status = novo; pintarPedidosLista(); pintarMenu(); pintarSomBtn();
+  if(novo!=="novo"){ pedVistos.add(id); localStorage.setItem("bb_vistos", JSON.stringify([...pedVistos])); }
+  if(contarPed("novo")===0) pedPararAlarme();
+  try{
+    await NUVEM.mudarStatus(id, novo);
+    toast(novo==="preparo"?"Pedido aceito":novo==="pronto"?"Pedido pronto":"Pedido entregue");
+    if(msgAtual(novo)) pedPerguntarZap(p, novo);
+  }catch(e){ toast("Não consegui salvar. Confira a internet."); carregarPedidos(false); }
+}
+async function pedRecusar(id){
+  if(!confirm("Recusar este pedido?")) return;
+  const p = PEDIDOS.find(x=>x.id===id); if(!p) return;
+  p.status = "recusado"; pintarPedidosLista(); pintarMenu(); pintarSomBtn();
+  if(contarPed("novo")===0) pedPararAlarme();
+  try{ await NUVEM.mudarStatus(id,"recusado"); toast("Pedido recusado"); if(msgAtual("recusado")) pedPerguntarZap(p,"recusado"); }
+  catch(e){ toast("Não consegui salvar."); carregarPedidos(false); }
+}
+function pedAbrir(id){ pedAbertos[id] = !pedAbertos[id]; pintarPedidosLista(); }
+
+function pedMontarMsg(p, status){
+  const txt = msgAtual(status) || "";
+  const entrega = p.tipo==="entrega" ? "Já vai sair para entrega. 🛵" : "Pode vir buscar no balcão. 🏠";
+  return txt.replace(/{nome}/g, (p.cliente||"").split(" ")[0])
+            .replace(/{codigo}/g, "#"+p.codigo)
+            .replace(/{total}/g, brl(p.total))
+            .replace(/{entrega}/g, entrega);
+}
+function pedZap(id, status){
+  const p = PEDIDOS.find(x=>x.id===id); if(!p) return;
+  const fone = String(p.telefone||"").replace(/\D/g,"");
+  const num = fone.length<=11 ? "55"+fone : fone;
+  const msg = status ? pedMontarMsg(p, status) : "";
+  window.open(`https://wa.me/${num}` + (msg?`?text=${encodeURIComponent(msg)}`:""), "_blank");
+}
+function pedPerguntarZap(p, status){
+  const t = document.getElementById("tst");
+  t.innerHTML = `Avisar ${esc((p.cliente||"").split(" ")[0])} no WhatsApp?
+    <button style="margin-left:10px;background:var(--pd-zap);color:#fff;font-weight:800;border-radius:9px;padding:7px 13px"
+      onclick="pedZap('${p.id}','${status}');document.getElementById('tst').classList.remove('on')">Enviar</button>`;
+  t.classList.add("on");
+  clearTimeout(tt); tt = setTimeout(()=>t.classList.remove("on"), 8000);
+}
+
+/* ---------- TELA ---------- */
+function telaPedidos(){
+  return `
+  <div class="abas"><div class="abas-in" id="pedAbasEl"></div></div>
+  <div class="busca"><input id="pedBuscaEl" placeholder="Buscar por nome, código, telefone ou item…"
+    value="${esc(pedBusca)}" oninput="pedBusca=this.value;pintarPedidosLista()"></div>
+  <div class="lista" id="pedListaEl"></div>`;
+}
+function pintarPedidosLista(){
+  const abasEl = document.getElementById("pedAbasEl"); if(!abasEl) return;
+  abasEl.innerHTML = PED_ABAS.map(a=>{
+    const n = contarPed(a.id);
+    const alerta = a.id==="novo" && n>0;
+    return `<button class="aba ${pedAba===a.id?"on":""} ${alerta?"tem-novo":""}" onclick="pedAba='${a.id}';pintarPedidosLista()">
+      ${a.t}${n?`<span class="n">${n}</span>`:""}</button>`;
+  }).join("");
+
+  const q = pedBusca.trim().toLowerCase();
+  let lista = PEDIDOS.filter(p=>daAbaPed(p)===pedAba);
+  if(q) lista = lista.filter(p =>
+    (p.cliente||"").toLowerCase().includes(q) ||
+    (p.codigo||"").toLowerCase().includes(q) ||
+    (p.telefone||"").includes(q) ||
+    (p.itens||[]).some(i=>(i.nome||"").toLowerCase().includes(q)));
+
+  const el = document.getElementById("pedListaEl");
+  if(!lista.length){
+    const vaz = {
+      novo:["🔔","Nenhum pedido novo","Quando entrar pedido, ele aparece aqui e toca o alerta."],
+      preparo:["👨‍🍳","Nada em preparo","Os pedidos aceitos aparecem aqui."],
+      pronto:["✅","Nenhum pedido pronto","Quando marcar como pronto, cai nesta aba."],
+      fim:["📦","Nenhum pedido finalizado hoje","Entregues e recusados ficam aqui."]
+    }[pedAba];
+    el.innerHTML = `<div class="pd-vazio"><div class="em">${vaz[0]}</div><b>${vaz[1]}</b>${vaz[2]}</div>`;
+    return;
+  }
+  el.innerHTML = lista.map(pedCard).join("");
+}
+function pedCard(p){
+  const min = (Date.now() - new Date(p.criado_em).getTime())/60000;
+  const hora = new Date(p.criado_em).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  const qtdItens = (p.itens||[]).reduce((s,i)=>s+(i.qty||1),0);
+  const aberto = !!pedAbertos[p.id];
+  const piscando = p.status==="novo";
+  const e = p.endereco || {};
+  const temEnd = p.tipo==="entrega" && (e.rua||e.bairro);
+
+  return `<div class="pd s-${p.status} ${aberto?"aberto":""} ${piscando?"piscando":""}">
+    <div class="pd-h" onclick="pedAbrir('${p.id}')">
+      <span class="dot"></span>
+      <div class="tt">
+        <b>${esc(p.cliente)}</b>
+        <div class="sub">#${esc(p.codigo)} · ${hora} · ${pedFaz(min)} · ${qtdItens} ${qtdItens>1?"itens":"item"}</div>
+      </div>
+      <div class="rt">
+        <div class="vl">${brl(p.total)}</div>
+        <span class="tag ${p.tipo==="entrega"?"ent":"ret"}">${p.tipo==="entrega"?"🛵 Entrega":"🏠 Retirada"}</span>
+      </div>
+      <span class="seta">▾</span>
+    </div>
+
+    <div class="pd-b">
+      <div class="fone">
+        <span>📞</span><span class="num">${esc(p.telefone)}</span>
+        <button class="zap-btn" onclick="event.stopPropagation();pedZap('${p.id}','${p.status==='novo'?'':p.status}')" title="Falar no WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.6 14.2c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.5.1.3.7 1.1 1.5 1.8 1 .9 1.8 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.5-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.1Z"/></svg>
+        </button>
+      </div>
+      ${temEnd?`<div class="end"><span>📍</span><div><b>${esc(e.rua)}, ${esc(e.num)}</b>${e.comp?" — "+esc(e.comp):""}<br>
+        ${esc(e.bairro)}${e.ref?`<br><span style="font-size:12.5px">Referência: ${esc(e.ref)}</span>`:""}</div></div>`:""}
+
+      <div class="itens">
+        ${(p.itens||[]).map(i=>`<div class="it">
+          <span class="q">${i.qty||1}×</span>
+          <div class="nm"><b>${esc(i.nome)}</b>
+            ${i.detalhes?`<div class="cfg">${esc(i.detalhes)}</div>`:""}
+            ${i.obs?`<div class="obs">📝 ${esc(i.obs)}</div>`:""}</div>
+          <span class="vl">${brl(i.preco)}</span>
+        </div>`).join("")}
+      </div>
+
+      <div class="somas">
+        <div class="sm"><span>Subtotal</span><span>${brl(p.subtotal)}</span></div>
+        ${p.desconto>0?`<div class="sm desc"><span>Cupom ${esc(p.cupom||"")}</span><span>− ${brl(p.desconto)}</span></div>`:""}
+        ${p.tipo==="entrega"?`<div class="sm"><span>Taxa de entrega</span><span>${p.taxa>0?brl(p.taxa):"Grátis"}</span></div>`:""}
+        ${p.gorjeta>0?`<div class="sm"><span>Gorjeta</span><span>${brl(p.gorjeta)}</span></div>`:""}
+        <div class="sm tot"><span>Total</span><span>${brl(p.total)}</span></div>
+        ${p.pagamento?`<div class="pag">💳 ${esc(p.pagamento)}${p.troco?` · troco p/ ${esc(p.troco)}`:""}</div>`:""}
+      </div>
+
+      ${PED_PROXIMO[p.status]?`<div class="acoes">
+        <button class="ac ${p.status==='novo'?'ac-p':p.status==='preparo'?'ac-prep':'ac-ok'}" onclick="pedAvancar('${p.id}')">
+          ${PED_ROTULO_ACAO[p.status]}</button>
+        ${p.status==='novo'?`<button class="ac ac-g" onclick="pedRecusar('${p.id}')">Recusar</button>`:""}
+      </div>`:`<div class="acoes"><button class="ac ac-g" style="flex:1" disabled
+        >${p.status==="entregue"?"✅ Entregue":"✖ Recusado"}</button></div>`}
+    </div>
+  </div>`;
+}
+
+function iniciarPedidos(){
+  if(somLigado) document.getElementById("somOff")?.classList.add("on");
+  pintarSomBtn();
+  carregarPedidos(true);
+  setInterval(()=>carregarPedidos(false), 6000);
+  setInterval(()=>{ if(TELA==="pedidos") pintarPedidosLista(); }, 30000);
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) carregarPedidos(false); });
+}
 
 /* ==================================================================
    MODAL
@@ -1390,7 +1791,8 @@ function wzProd(catKey){
     <div class="f"><label>Foto (opcional agora)</label>
       <div class="up"><div class="pv" id="pPv">📷</div>
         <div class="uc"><p>Pode adicionar depois, mas com foto vende bem mais.</p>
-          <label class="btn btn-g btn-sm" style="display:inline-block">Escolher foto
+          <p style="font-size:11.5px;color:var(--soft);margin-top:2px">Tamanho ideal: <b>800×800px</b>, quadrada</p>
+          <label class="btn btn-g btn-sm" style="display:inline-block;margin-top:6px">Escolher foto
             <input type="file" accept="image/*" hidden onchange="pegarImagem(this,700,v=>{imgTemp=v;document.getElementById('pPv').innerHTML='<img src=\\''+v+'\\'>'})">
           </label></div></div></div>
     <div class="f"><label>Nome</label><input class="in" id="pN" placeholder="Ex: Cheddar Bacon"></div>
@@ -1447,6 +1849,7 @@ function wzVoltar(){ if(wzP>0){ wzP--; wzPintar(); } }
 (async function(){
   await carregar();
   pintarMenu(); pintar();
+  iniciarPedidos();
   const semNada = !DB.loja.nome && !DB.produtos.length;
   if(!ONB.feito && semNada) abrirWizard(ONB.passo||0);
 })();

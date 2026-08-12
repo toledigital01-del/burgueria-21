@@ -131,13 +131,9 @@ main{max-width:1120px;margin:0 auto;padding:14px 15px 20px}
 .vazio b{display:block;color:var(--ink);font-size:16.5px;margin-bottom:5px}
 
 /* ---------- ALERTA DE SOM ---------- */
-.somOff{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:80;width:min(94%,540px);
-  background:var(--ink);color:#fff;border-radius:14px;padding:14px 16px;display:none;align-items:center;gap:12px;
-  box-shadow:0 12px 34px rgba(0,0,0,.32)}
-.somOff.on{display:flex}
-.somOff .tx{flex:1;font-size:13.5px;line-height:1.45}
-.somOff .tx b{display:block;font-size:14.5px;margin-bottom:2px}
-.somOff button{background:var(--novo);color:#3a2408;font-weight:800;border-radius:10px;padding:11px 16px;font-size:14px;flex:none}
+.ic-btn .dot{position:absolute;bottom:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:var(--novo);
+  border:2px solid #fff;animation:pulsaDot 1.6s infinite}
+@keyframes pulsaDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.25);opacity:.6}}
 
 .tst{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(22px);z-index:95;background:var(--ink);color:#fff;
   padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.24s;box-shadow:0 10px 30px rgba(0,0,0,.3)}
@@ -171,11 +167,6 @@ main{max-width:1120px;margin:0 auto;padding:14px 15px 20px}
   <div class="erro" id="erro"></div>
   <div class="lista" id="lista"></div>
 </main>
-
-<div class="somOff" id="somOff">
-  <div class="tx"><b>Ative o aviso sonoro</b>Toque uma vez para o navegador deixar tocar o alerta quando entrar pedido.</div>
-  <button onclick="ligarSom()">Ativar</button>
-</div>
 
 <div class="tst" id="tst"></div>
 
@@ -230,18 +221,28 @@ function ligarSom(){
     ctx = ctx || new (window.AudioContext||window.webkitAudioContext)();
     ctx.resume();
     audioOk = true;
-    document.getElementById("somOff").classList.remove("on");
     tocarAlerta(1); // amostra curta pra confirmar que funciona
     toast("Som ativado");
   }catch(e){ toast("Este navegador não deixou ativar o som"); }
+  pintarSomBtn();
 }
+/* Botão fixo do sino no topo — sempre visível. 1º clique na aba libera
+   o som (o navegador exige um toque antes de deixar tocar áudio);
+   cliques seguintes só ligam/desligam, sem pedir de novo. */
 function alternarSom(){
+  if(!audioOk){ somLigado = true; localStorage.setItem("bb_som","1"); ligarSom(); return; }
   somLigado = !somLigado;
   localStorage.setItem("bb_som", somLigado?"1":"0");
-  document.getElementById("btnSom").classList.toggle("mudo", !somLigado);
-  document.getElementById("btnSom").textContent = somLigado ? "🔔" : "🔕";
-  if(somLigado){ if(!audioOk) ligarSom(); else { tocarAlerta(1); toast("Som ligado"); } }
+  if(somLigado){ tocarAlerta(1); toast("Som ligado"); }
   else { pararAlarme(); toast("Som desligado"); }
+  pintarSomBtn();
+}
+function pintarSomBtn(){
+  const b = document.getElementById("btnSom"); if(!b) return;
+  const precisaAtivar = somLigado && !audioOk;
+  b.classList.toggle("mudo", !somLigado);
+  b.title = precisaAtivar ? "Toque para ativar o aviso sonoro" : somLigado ? "Som ativado — toque pra desligar" : "Som desligado — toque pra ligar";
+  b.innerHTML = (somLigado?"🔔":"🔕") + (precisaAtivar?`<span class="dot"></span>`:"");
 }
 
 /* Uma "badalada" com corpo — duas vozes afinadas + brilho, com cauda longa. */
@@ -507,9 +508,7 @@ function card(p){
 /* ==================================================================
    INICIAR
 ================================================================== */
-document.getElementById("btnSom").textContent = somLigado ? "🔔" : "🔕";
-document.getElementById("btnSom").classList.toggle("mudo", !somLigado);
-if(somLigado) document.getElementById("somOff").classList.add("on");
+pintarSomBtn();
 
 carregar(true);
 setInterval(()=>carregar(false), 6000);   // busca pedidos novos a cada 6s

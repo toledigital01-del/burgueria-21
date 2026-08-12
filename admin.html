@@ -131,13 +131,9 @@ h1,h2,h3{line-height:1.25}
 .pd-vazio{text-align:center;padding:60px 24px;color:var(--soft);grid-column:1/-1}
 .pd-vazio .em{font-size:46px;margin-bottom:12px;opacity:.55}
 .pd-vazio b{display:block;color:var(--ink);font-size:16.5px;margin-bottom:5px}
-.somOff{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:80;width:min(94%,540px);
-  background:var(--ink);color:#fff;border-radius:14px;padding:14px 16px;display:none;align-items:center;gap:12px;
-  box-shadow:0 12px 34px rgba(0,0,0,.32)}
-.somOff.on{display:flex}
-.somOff .tx{flex:1;font-size:13.5px;line-height:1.45}
-.somOff .tx b{display:block;font-size:14.5px;margin-bottom:2px}
-.somOff button{background:var(--pd-novo);color:#3a2408;font-weight:800;border-radius:10px;padding:11px 16px;font-size:14px;flex:none}
+.ic-btn .dot{position:absolute;bottom:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:var(--pd-novo);
+  border:2px solid #fff;animation:pulsaDot 1.6s infinite}
+@keyframes pulsaDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.25);opacity:.6}}
 .erroPed{background:#FDF0EE;border:1px solid #F3D9D4;color:#8b3226;border-radius:12px;padding:12px 15px;font-size:13.5px;display:none;margin-bottom:12px}
 .erroPed.on{display:block}
 
@@ -412,11 +408,6 @@ body.tema-fluxya .ib.del:hover{color:var(--brand)}
 </div>
 
 <div class="tst" id="tst"></div>
-
-<div class="somOff" id="somOff">
-  <div class="tx"><b>Ative o aviso sonoro</b>Toque uma vez para o navegador deixar tocar o alerta quando entrar pedido.</div>
-  <button onclick="ligarSom()">Ativar</button>
-</div>
 
 <button class="tour-fab" id="tourFab" onclick="iniciarTour(false)"><span>🎓</span><span>Tutorial</span></button>
 <div class="tour-hole" id="tourHole"></div>
@@ -1390,24 +1381,34 @@ function ligarSom(){
     pedCtx = pedCtx || new (window.AudioContext||window.webkitAudioContext)();
     pedCtx.resume();
     pedAudioOk = true;
-    document.getElementById("somOff").classList.remove("on");
     pedTocarAlerta(1);
     toast("Som ativado");
   }catch(e){ toast("Este navegador não deixou ativar o som"); }
   pintarSomBtn();
 }
+/* Botão fixo do sino no topo — sempre visível, um clique resolve:
+   1º clique na aba (som nunca foi liberado ainda): libera o som e liga.
+   Cliques seguintes: só alterna ligado/desligado, sem pedir de novo. */
 function alternarSom(){
+  if(!pedAudioOk){
+    somLigado = true;
+    localStorage.setItem("bb_som","1");
+    ligarSom();
+    return;
+  }
   somLigado = !somLigado;
   localStorage.setItem("bb_som", somLigado?"1":"0");
-  if(somLigado){ if(!pedAudioOk) ligarSom(); else { pedTocarAlerta(1); toast("Som ligado"); } }
+  if(somLigado){ pedTocarAlerta(1); toast("Som ligado"); }
   else { pedPararAlarme(); toast("Som desligado"); }
   pintarSomBtn();
 }
 function pintarSomBtn(){
   const b = document.getElementById("btnSom"); if(!b) return;
   const n = contarPed("novo");
+  const precisaAtivar = somLigado && !pedAudioOk;
   b.classList.toggle("mudo", !somLigado);
-  b.innerHTML = (somLigado?"🔔":"🔕") + (n?`<span class="bad">${n}</span>`:"");
+  b.title = precisaAtivar ? "Toque para ativar o aviso sonoro" : somLigado ? "Som ativado — toque pra desligar" : "Som desligado — toque pra ligar";
+  b.innerHTML = (somLigado?"🔔":"🔕") + (n?`<span class="bad">${n}</span>`:"") + (precisaAtivar?`<span class="dot"></span>`:"");
 }
 
 /* Uma "badalada" com corpo — duas vozes afinadas + brilho, cauda longa. */
@@ -1643,7 +1644,6 @@ function pedCard(p){
 }
 
 function iniciarPedidos(){
-  if(somLigado) document.getElementById("somOff")?.classList.add("on");
   pintarSomBtn();
   carregarPedidos(true);
   setInterval(()=>carregarPedidos(false), 6000);

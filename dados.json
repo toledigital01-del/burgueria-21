@@ -1,0 +1,84 @@
+{
+  "loja": {
+    "nome": "Burgueria 21",
+    "slogan": "O melhor hambúrguer da cidade",
+    "logo": "apple-touch-icon.png",
+    "capa": "img/hero-chapa.webp",
+    "whatsapp": "5553999709661",
+    "endereco": "Av. Santa Tecla, 2001 — Bagé/RS, CEP 96413-000",
+    "maps": "https://maps.google.com/?q=Avenida+Santa+Tecla+2001+Bage+RS",
+    "sobreTitulo": "Sobre a Burgueria 21",
+    "sobre": "A Burgueria 21 é hambúrguer artesanal de verdade: blend bovino selado na chapa quente, pão brioche macio tostado na manteiga e ingredientes fresquinhos. Cada burger sai suculento, do jeito que tem que ser.\n\nMonte o seu do jeito que gosta — escolha o ponto da carne, turbine com adicionais e transforme em combo com batata e refri. Receba quentinho em casa ou retire no balcão, tudo pela internet, sem app e sem complicação."
+  },
+  "cores": {
+    "principal": "#C0392B",
+    "principalEscuro": "#8E2A20",
+    "destaque": "#E8A33D",
+    "fundo": "#FBF3E7",
+    "cartao": "#FFFDF8",
+    "texto": "#2A211E"
+  },
+  "horario": {
+    "dias": [0, 1, 2, 3, 4, 5, 6],
+    "abre": "18:00",
+    "fecha": "23:00"
+  },
+  "entrega": {
+    "ativa": true,
+    "taxa": 8,
+    "gratisAcima": 70,
+    "retirada": true,
+    "gorjetas": [0, 2, 5]
+  },
+  "pagamento": {
+    "pix": true,
+    "dinheiro": true,
+    "cartao": true
+  },
+  "combo": {
+    "ativo": true,
+    "preco": 12,
+    "label": "Combo (batata + refri)",
+    "chamada": "Adicione batata + refri por só"
+  },
+  "cupons": [
+    { "codigo": "PRIMEIRA10", "tipo": "percent", "valor": 10, "label": "10% de desconto", "ativo": true }
+  ],
+  "pontos": [
+    { "id": "mal", "n": "Mal passada" },
+    { "id": "ponto", "n": "Ao ponto" },
+    { "id": "bem", "n": "Bem passada" }
+  ],
+  "adicionais": [
+    { "id": "bacon", "n": "Bacon", "p": 5, "ativo": true },
+    { "id": "cheddar", "n": "Cheddar extra", "p": 4, "ativo": true },
+    { "id": "ovo", "n": "Ovo", "p": 3, "ativo": true },
+    { "id": "cebola", "n": "Cebola caramelizada", "p": 4, "ativo": true }
+  ],
+  "categorias": [
+    { "key": "burgers", "nome": "Burgers", "sub": "na chapa · vira combo se quiser", "montavel": true, "emoji": "🍔" },
+    { "key": "acomp", "nome": "Acompanhamentos", "sub": "pra completar", "montavel": false, "emoji": "🍟" },
+    { "key": "bebidas", "nome": "Bebidas", "sub": "", "montavel": false, "emoji": "🥤" },
+    { "key": "sobremesas", "nome": "Sobremesas", "sub": "", "montavel": false, "emoji": "🍰" }
+  ],
+  "produtos": [
+    { "id": "classico", "cat": "burgers", "n": "Clássico", "d": "blend bovino 160g, queijo, alface, tomate, cebola e molho da casa no pão brioche", "p": 28, "img": "img/burger-classico.webp", "carne": true, "ativo": true },
+    { "id": "cheddar-bacon", "cat": "burgers", "n": "Cheddar Bacon", "d": "blend 160g, cheddar derretido, bacon crocante e cebola no pão brioche", "p": 34, "img": "img/burger-cheddar-bacon.webp", "carne": true, "ativo": true },
+    { "id": "duplo-smash", "cat": "burgers", "n": "Duplo Smash", "d": "dois discos smash, queijo duplo, picles e molho especial", "p": 39, "img": "img/burger-duplo-smash.webp", "carne": true, "ativo": true },
+    { "id": "frango", "cat": "burgers", "n": "Frango Crocante", "d": "filé de frango empanado crocante, alface, tomate e maionese temperada", "p": 32, "img": "img/burger-frango.webp", "carne": false, "ativo": true },
+    { "id": "veggie", "cat": "burgers", "n": "Veggie", "d": "burger de grão-de-bico e legumes, alface, tomate e cebola roxa", "p": 30, "img": "img/burger-veggie.webp", "carne": false, "ativo": true },
+    { "id": "costela", "cat": "burgers", "n": "Costela Barbecue", "d": "costela desfiada, molho barbecue, cebola crispy e queijo prato", "p": 37, "img": "img/burger-costela.webp", "carne": true, "ativo": true },
+    { "id": "salada", "cat": "burgers", "n": "Salada", "d": "blend bovino 160g, muito salada fresca, queijo e molho leve", "p": 29, "img": "img/burger-classico.webp", "carne": true, "ativo": true },
+    { "id": "batata-frita", "cat": "acomp", "n": "Batata Frita", "d": "porção crocante", "p": 15, "img": "img/batata-frita.webp", "ativo": true },
+    { "id": "batata-cheddar", "cat": "acomp", "n": "Batata c/ Cheddar e Bacon", "d": "cheddar cremoso e bacon", "p": 24, "img": "img/batata-cheddar-bacon.webp", "ativo": true },
+    { "id": "onion-rings", "cat": "acomp", "n": "Onion Rings", "d": "anéis de cebola empanados", "p": 18, "img": "img/onion-rings.webp", "ativo": true },
+    { "id": "nuggets", "cat": "acomp", "n": "Nuggets (8un)", "d": "crocante por fora, macio por dentro", "p": 16, "img": "", "ativo": true },
+    { "id": "coca-lata", "cat": "bebidas", "n": "Coca-Cola Lata", "d": "", "p": 6, "img": "", "ativo": true },
+    { "id": "guarana-lata", "cat": "bebidas", "n": "Guaraná Lata", "d": "", "p": 6, "img": "", "ativo": true },
+    { "id": "suco", "cat": "bebidas", "n": "Suco 500ml", "d": "laranja ou maracujá", "p": 8, "img": "", "ativo": true },
+    { "id": "agua", "cat": "bebidas", "n": "Água Mineral", "d": "", "p": 4, "img": "", "ativo": true },
+    { "id": "cerveja", "cat": "bebidas", "n": "Cerveja Long Neck", "d": "gelada", "p": 9, "img": "", "ativo": true },
+    { "id": "milkshake", "cat": "sobremesas", "n": "Milkshake", "d": "chocolate, morango ou baunilha", "p": 18, "img": "img/milkshake.webp", "ativo": true },
+    { "id": "brownie", "cat": "sobremesas", "n": "Brownie c/ Sorvete", "d": "quentinho com sorvete de creme", "p": 16, "img": "", "ativo": true }
+  ]
+}

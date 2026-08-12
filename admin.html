@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="./">
+<title>Painel da Loja — configure seu cardápio</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F4F1; --panel:#fff; --line:#E7E2DA; --ink:#221C19; --soft:#7B6E63;
+  --brand:#C0392B; --brand-d:#8E2A20; --gold:#E8A33D; --ok:#3E8E4E; --okbg:#EDF6EE;
+  --r:14px; --sh:0 6px 20px rgba(60,40,30,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:15px}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:15px}
+h1,h2,h3{line-height:1.25}
+.disp{font-family:'Anton',Impact,sans-serif;font-weight:400;letter-spacing:.5px}
+
+/* ---------- TOPO ---------- */
+.top{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(60,40,30,.05)}
+.top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:11px 16px}
+.top .mark{display:flex;align-items:center;gap:10px;min-width:0}
+.top .mark img{width:36px;height:36px;border-radius:9px;object-fit:cover;border:1px solid var(--line);background:#f2ede6}
+.top .mark .nm{font-weight:700;font-size:15px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44vw}
+.top .mark .sb{font-size:11.5px;color:var(--soft)}
+.top .sp{flex:1}
+.btn{border-radius:10px;padding:10px 15px;font-weight:700;font-size:13.5px;white-space:nowrap;transition:.15s;border:1.5px solid transparent}
+.btn:active{transform:scale(.97)}
+.btn-p{background:var(--brand);color:#fff}
+.btn-p:hover{background:var(--brand-d)}
+.btn-g{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn-g:hover{border-color:#cdc5b9}
+.btn-ok{background:var(--ok);color:#fff}
+.btn-sm{padding:7px 12px;font-size:12.5px;border-radius:9px}
+.btn-dg{color:var(--brand);background:#fdf0ee;border-color:#f6dcd8}
+.estado{display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--ok);white-space:nowrap}
+@media(max-width:700px){.estado{font-size:0;gap:0}.estado span{font-size:15px}}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:238px 1fr;gap:20px;padding:20px 16px 120px}
+@media(max-width:860px){.wrap{grid-template-columns:1fr;padding-bottom:96px}}
+.side{position:sticky;top:74px;align-self:start;display:flex;flex-direction:column;gap:4px}
+@media(max-width:860px){.side{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:45;flex-direction:row;overflow-x:auto;background:#fff;border-top:1px solid var(--line);padding:6px;gap:2px;scrollbar-width:none}
+ .side::-webkit-scrollbar{display:none}}
+.nav-i{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:11px;font-size:14px;font-weight:600;color:var(--soft);text-align:left;transition:.13s;white-space:nowrap}
+.nav-i .ic{font-size:17px;line-height:1}
+.nav-i:hover{background:#EFEAE3;color:var(--ink)}
+.nav-i.on{background:var(--ink);color:#fff}
+.nav-i .pend{margin-left:auto;background:var(--gold);color:#3a2408;font-size:10.5px;font-weight:800;border-radius:99px;padding:2px 7px}
+.nav-i.on .pend{background:var(--gold)}
+@media(max-width:860px){.nav-i{flex-direction:column;gap:3px;font-size:10.5px;padding:8px 10px;min-width:66px;justify-content:center;text-align:center}
+ .nav-i .ic{font-size:19px}.nav-i .pend{position:absolute;margin:0;transform:translate(16px,-6px)}}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:20px;margin-bottom:16px}
+.card>h2{font-size:19px;font-weight:800;margin-bottom:3px}
+.card>.sub{font-size:13.5px;color:var(--soft);line-height:1.5;margin-bottom:16px}
+
+/* ---------- GUIA ---------- */
+.guia{display:flex;gap:12px;background:#FFF8EC;border:1px solid #F0DCB0;border-radius:var(--r);padding:14px 16px;margin-bottom:16px;font-size:13.5px;line-height:1.55;color:#5c4726}
+.guia .gi{font-size:20px;line-height:1;flex:none}
+.guia b{color:#3f3117}
+.guia ul{margin:7px 0 0 17px}
+.guia li{margin:3px 0}
+
+/* ---------- CAMPOS ---------- */
+.f{margin-bottom:15px}
+.f>label{display:block;font-size:12.5px;font-weight:700;margin-bottom:6px;letter-spacing:.2px}
+.f .hint{font-size:12px;color:var(--soft);margin-top:5px;line-height:1.45}
+.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;background:#FBFAF8;color:var(--ink);transition:.13s}
+.in:focus{outline:none;border-color:var(--gold);background:#fff}
+textarea.in{min-height:104px;resize:vertical;line-height:1.55}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:560px){.r2,.r3{grid-template-columns:1fr}}
+.pre{display:flex;align-items:stretch}
+.pre span{display:flex;align-items:center;padding:0 12px;background:#EFEAE3;border:1.5px solid var(--line);border-right:none;border-radius:10px 0 0 10px;font-size:13.5px;font-weight:600;color:var(--soft)}
+.pre .in{border-radius:0 10px 10px 0}
+
+.sw{display:flex;align-items:center;gap:11px;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;background:#FBFAF8;margin-bottom:9px;width:100%;text-align:left}
+.sw .kn{width:42px;height:24px;border-radius:99px;background:#D8D1C7;flex:none;position:relative;transition:.16s}
+.sw .kn::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.16s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw.on{border-color:#BFE0C6;background:var(--okbg)}
+.sw.on .kn{background:var(--ok)}
+.sw.on .kn::after{transform:translateX(18px)}
+.sw .tt{flex:1;min-width:0}
+.sw .tt b{display:block;font-size:14px;font-weight:600}
+.sw .tt small{display:block;font-size:12px;color:var(--soft);margin-top:1px}
+
+.dias{display:flex;gap:7px;flex-wrap:wrap}
+.dia{width:46px;height:46px;border-radius:11px;border:1.5px solid var(--line);background:#FBFAF8;font-weight:700;font-size:13px;color:var(--soft);transition:.13s}
+.dia.on{background:var(--ok);border-color:var(--ok);color:#fff}
+
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.pal button{border:2px solid var(--line);border-radius:12px;padding:10px;background:#fff;transition:.13s;text-align:center}
+.pal button.on{border-color:var(--ink);box-shadow:0 0 0 3px rgba(34,28,25,.09)}
+.pal .bars{display:flex;height:26px;border-radius:7px;overflow:hidden;margin-bottom:7px}
+.pal .bars i{flex:1}
+.pal .nm{font-size:11.5px;font-weight:700;color:var(--soft)}
+.colorline{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:11px;padding:8px 11px;background:#FBFAF8}
+.colorline input[type=color]{width:40px;height:34px;border:none;background:none;padding:0;cursor:pointer;border-radius:8px}
+.colorline .cl{flex:1;font-size:13px;font-weight:600}
+.colorline code{font-size:12px;color:var(--soft);font-family:ui-monospace,monospace}
+
+/* ---------- UPLOAD ---------- */
+.up{display:flex;gap:13px;align-items:center;border:1.5px dashed var(--line);border-radius:12px;padding:13px;background:#FBFAF8}
+.up .pv{width:82px;height:82px;border-radius:11px;background:#EFEAE3;flex:none;display:flex;align-items:center;justify-content:center;font-size:25px;overflow:hidden;border:1px solid var(--line)}
+.up .pv img{width:100%;height:100%;object-fit:cover}
+.up .uc{flex:1;min-width:0}
+.up .uc p{font-size:12.5px;color:var(--soft);line-height:1.45;margin-bottom:8px}
+.up.wide .pv{width:100%;height:120px;border-radius:11px}
+.up.wide{flex-direction:column;align-items:stretch}
+
+/* ---------- LISTAS ---------- */
+.li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:9px;transition:.13s}
+.li:hover{border-color:#d6cec2}
+.li.off{opacity:.5}
+.li .th{width:52px;height:52px;border-radius:10px;object-fit:cover;background:#EFEAE3;flex:none;display:flex;align-items:center;justify-content:center;font-size:21px;border:1px solid var(--line)}
+.li .tx{flex:1;min-width:0}
+.li .tx b{display:block;font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .tx small{display:block;font-size:12px;color:var(--soft);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .pr{font-weight:800;font-size:14.5px;white-space:nowrap}
+.li .ax{display:flex;gap:5px;flex:none}
+.ib{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:14px;color:var(--soft);display:flex;align-items:center;justify-content:center}
+.ib:hover{background:#F3EFE9;color:var(--ink)}
+.ib.del:hover{background:#fdf0ee;color:var(--brand);border-color:#f6dcd8}
+.grp{margin-bottom:22px}
+.grp>h3{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);margin:0 2px 9px;display:flex;align-items:center;gap:8px}
+.grp>h3 .ct{background:#EFEAE3;color:var(--soft);border-radius:99px;padding:2px 8px;font-size:11px;letter-spacing:0}
+.vazio{text-align:center;border:1.5px dashed var(--line);border-radius:12px;padding:26px 18px;color:var(--soft);font-size:13.5px;line-height:1.6;background:#FBFAF8}
+.vazio .em{font-size:32px;margin-bottom:7px}
+.vazio b{color:var(--ink)}
+
+/* ---------- CHECKLIST ---------- */
+.ck{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;background:#fff;width:100%;text-align:left;transition:.13s}
+.ck:hover{border-color:#cdc5b9}
+.ck .bx{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent}
+.ck.done{background:var(--okbg);border-color:#BFE0C6}
+.ck.done .bx{background:var(--ok);border-color:var(--ok);color:#fff}
+.ck .tt{flex:1;min-width:0}
+.ck .tt b{display:block;font-size:14px;font-weight:700}
+.ck .tt small{display:block;font-size:12px;color:var(--soft);margin-top:1px;line-height:1.4}
+.ck.done .tt b{text-decoration:line-through;opacity:.7}
+.ck .go{color:var(--soft);font-size:17px}
+.prog{height:9px;background:#EFEAE3;border-radius:99px;overflow:hidden;margin:12px 0 6px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--ok));border-radius:99px;transition:width .4s}
+.prog-t{font-size:12.5px;color:var(--soft);font-weight:600}
+
+/* ---------- MODAL ---------- */
+.ov{position:fixed;inset:0;background:rgba(30,20,14,.55);z-index:70;opacity:0;pointer-events:none;transition:.2s}
+.ov.on{opacity:1;pointer-events:auto}
+.md{position:fixed;z-index:80;background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.3);
+  left:50%;top:50%;transform:translate(-50%,-46%) scale(.97);opacity:0;pointer-events:none;transition:.2s;
+  width:min(94vw,560px);max-height:90vh;display:flex;flex-direction:column}
+.md.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+@media(max-width:600px){.md{width:100%;left:0;top:auto;bottom:0;transform:translateY(100%);border-radius:18px 18px 0 0;max-height:94vh}
+ .md.on{transform:translateY(0)}}
+.md-h{display:flex;align-items:center;justify-content:space-between;padding:17px 20px 13px;border-bottom:1px solid var(--line)}
+.md-h h3{font-size:17.5px;font-weight:800}
+.md-b{overflow-y:auto;padding:18px 20px}
+.md-f{padding:14px 20px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--line);display:flex;gap:10px}
+.md-f .btn{flex:1;padding:13px;font-size:15px;justify-content:center;text-align:center}
+.x{font-size:25px;color:var(--soft);width:34px;height:34px;line-height:1}
+
+/* ---------- WIZARD ---------- */
+.wz{position:fixed;inset:0;z-index:90;background:var(--bg);display:none;flex-direction:column}
+.wz.on{display:flex}
+.wz-top{background:#fff;border-bottom:1px solid var(--line);padding:13px 18px}
+.wz-top .st{display:flex;align-items:center;justify-content:space-between;max-width:620px;margin:0 auto 9px;font-size:12.5px;font-weight:700;color:var(--soft)}
+.wz-bar{max-width:620px;margin:0 auto;height:7px;background:#EFEAE3;border-radius:99px;overflow:hidden}
+.wz-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--brand));border-radius:99px;transition:width .35s}
+.wz-body{flex:1;overflow-y:auto;padding:26px 18px 20px}
+.wz-in{max-width:560px;margin:0 auto}
+.wz-in .em{font-size:44px;margin-bottom:11px;line-height:1}
+.wz-in h2{font-size:25px;font-weight:800;margin-bottom:7px;line-height:1.2}
+.wz-in .lead{font-size:14.5px;color:var(--soft);line-height:1.6;margin-bottom:20px}
+.wz-foot{background:#fff;border-top:1px solid var(--line);padding:13px 18px calc(15px + env(safe-area-inset-bottom))}
+.wz-foot .in2{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.wz-foot .btn{padding:14px 22px;font-size:15px}
+.wz-foot .btn-p{flex:1;text-align:center}
+.wz-skip{font-size:12.5px;color:var(--soft);text-decoration:underline;background:none;padding:8px}
+
+/* ---------- TOAST ---------- */
+.tst{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(24px);z-index:99;background:var(--ink);color:#fff;
+  padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.24s;box-shadow:0 10px 30px rgba(0,0,0,.32);max-width:90vw}
+.tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:860px){.tst{bottom:88px}}
+
+/* ---------- TOUR (guia que destaca o elemento na tela) ---------- */
+.tour-fab{position:fixed;right:18px;bottom:22px;z-index:65;background:var(--ink);color:#fff;border-radius:99px;
+  padding:12px 18px 12px 15px;display:none;align-items:center;gap:9px;font-weight:700;font-size:13.5px;
+  box-shadow:0 10px 28px rgba(0,0,0,.28);transition:.15s}
+.tour-fab.show{display:flex}
+.tour-fab:hover{background:#000}
+.tour-fab .xx{background:rgba(255,255,255,.16);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:13px}
+@media(max-width:860px){.tour-fab{bottom:78px}}
+.tour-hole{position:fixed;z-index:120;border-radius:13px;box-shadow:0 0 0 9999px rgba(24,17,12,.62);
+  border:2.5px solid var(--gold);display:none;pointer-events:none;transition:all .25s cubic-bezier(.3,.7,.3,1)}
+.tour-bubble{position:fixed;z-index:121;background:#fff;border-radius:14px;box-shadow:0 16px 44px rgba(0,0,0,.32);
+  padding:16px 18px;width:300px;max-width:calc(100vw - 28px);display:none;transition:all .25s cubic-bezier(.3,.7,.3,1)}
+.tour-bubble .tp{font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.4px}
+.tour-bubble h4{font-size:15.5px;font-weight:800;margin:5px 0 6px}
+.tour-bubble p{font-size:13px;color:var(--soft);line-height:1.5}
+.tour-bubble .tf{display:flex;align-items:center;justify-content:space-between;margin-top:13px}
+.tour-bubble .tf .esq{display:flex;gap:8px;align-items:center}
+.tour-skip{font-size:12px;color:var(--soft);text-decoration:underline}
+.tour-nav{background:var(--ink);color:#fff;font-weight:700;font-size:13px;padding:9px 15px;border-radius:9px}
+.tour-back{background:none;color:var(--soft);font-size:13px;padding:9px 6px}
+
+.linkbox{display:flex;gap:9px;align-items:center;background:#FBFAF8;border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:10px}
+.linkbox code{flex:1;font-size:12.5px;font-family:ui-monospace,monospace;color:var(--soft);word-break:break-all}
+.steps{counter-reset:s;margin-top:6px}
+.steps li{list-style:none;position:relative;padding:0 0 14px 38px;font-size:13.5px;line-height:1.6;color:var(--soft)}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;
+  background:var(--ink);color:#fff;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.steps li b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="top-in">
+    <div class="mark">
+      <img id="tLogo" src="apple-touch-icon.png" alt="">
+      <div>
+        <div class="nm" id="tNome">Minha Loja</div>
+        <div class="sb">Painel da loja</div>
+      </div>
+    </div>
+    <div class="sp"></div>
+    <span class="estado" id="estado">✅ Publicado</span>
+    <button class="btn btn-g" onclick="verSite()">Ver site</button>
+    <button class="btn btn-p" onclick="location.href='pedidos.html'">Pedidos</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="side" id="side"></nav>
+  <main id="main"></main>
+</div>
+
+<div class="ov" id="ov" onclick="fecharModal()"></div>
+<div class="md" id="md">
+  <div class="md-h"><h3 id="mdT"></h3><button class="x" onclick="fecharModal()">×</button></div>
+  <div class="md-b" id="mdB"></div>
+  <div class="md-f" id="mdF"></div>
+</div>
+
+<div class="wz" id="wz">
+  <div class="wz-top">
+    <div class="st"><span id="wzSt"></span><span id="wzPc"></span></div>
+    <div class="wz-bar"><i id="wzBar"></i></div>
+  </div>
+  <div class="wz-body"><div class="wz-in" id="wzB"></div></div>
+  <div class="wz-foot"><div class="in2" id="wzF"></div></div>
+</div>
+
+<div class="tst" id="tst"></div>
+
+<button class="tour-fab" id="tourFab" onclick="iniciarTour(false)"><span>🎓</span><span>Tutorial</span></button>
+<div class="tour-hole" id="tourHole"></div>
+<div class="tour-bubble" id="tourBubble"></div>
+
+<script src="nuvem.js"></script>
+<script>
+/* ==================================================================
+   PAINEL DA LOJA — o dono configura tudo sozinho, sem mexer em código.
+   Os dados ficam salvos no navegador e viram o arquivo dados.json,
+   que é o que o site do cardápio lê.
+================================================================== */
+
+const CHAVE = "bb_loja_dados";
+const CHAVE_ONB = "bb_onboarding";
+
+const VAZIO = {
+  loja:{nome:"",slogan:"",logo:"",capa:"",whatsapp:"",endereco:"",maps:"",sobreTitulo:"",sobre:""},
+  cores:{principal:"#C0392B",principalEscuro:"#8E2A20",destaque:"#E8A33D",fundo:"#FBF3E7",cartao:"#FFFDF8",texto:"#2A211E"},
+  horario:{dias:[0,1,2,3,4,5,6],abre:"18:00",fecha:"23:00"},
+  entrega:{ativa:true,taxa:8,gratisAcima:70,retirada:true,gorjetas:[0,2,5]},
+  pagamento:{pix:true,dinheiro:true,cartao:true},
+  combo:{ativo:false,preco:12,label:"Combo (batata + refri)",chamada:"Adicione batata + refri por só"},
+  mensagens:{},
+  cupons:[], pontos:[], adicionais:[], categorias:[], produtos:[]
+};
+
+let DB = null;
+let ONB = { feito:false, passo:0, vistos:{} };
+let TELA = "inicio";
+let sujo = false;
+
+/* ---------- carregar / salvar ---------- */
+async function carregar(){
+  try{ const o=localStorage.getItem(CHAVE_ONB); if(o) ONB={...ONB,...JSON.parse(o)}; }catch(e){}
+  // o servidor é a fonte oficial — assim o dono edita de qualquer aparelho
+  try{
+    const r = await NUVEM.carregarCardapio();
+    if(r && r.dados && Object.keys(r.dados).length){ DB = normalizar(r.dados); return; }
+  }catch(e){ console.warn("sem conexão, usando cópia local", e); }
+  const local = localStorage.getItem(CHAVE);
+  if(local){ try{ DB = normalizar(JSON.parse(local)); return; }catch(e){} }
+  try{
+    const r = await fetch("dados.json",{cache:"no-store"});
+    if(r.ok){ DB = normalizar(await r.json()); return; }
+  }catch(e){}
+  DB = normalizar(JSON.parse(JSON.stringify(VAZIO)));
+  ONB.feito = false;
+}
+function normalizar(d){
+  const b = JSON.parse(JSON.stringify(VAZIO));
+  const out = {...b, ...d};
+  for(const k of ["loja","cores","horario","entrega","pagamento","combo","mensagens"]) out[k] = {...b[k], ...(d[k]||{})};
+  for(const k of ["cupons","pontos","adicionais","categorias","produtos"]) out[k] = Array.isArray(d[k]) ? d[k] : [];
+  return out;
+}
+/* Salva local na hora e publica sozinho no servidor logo em seguida.
+   O dono não precisa baixar nem subir arquivo nenhum. */
+let timerPublicar = null, publicando = false;
+function salvar(){
+  localStorage.setItem(CHAVE, JSON.stringify(DB));
+  localStorage.setItem(CHAVE_ONB, JSON.stringify(ONB));
+  pintarTopo();
+  marcarEstado("pendente");
+  clearTimeout(timerPublicar);
+  timerPublicar = setTimeout(publicarAgora, 1200);
+}
+async function publicarAgora(){
+  if(publicando) return;
+  publicando = true; marcarEstado("salvando");
+  try{
+    await NUVEM.salvarCardapio(DB);
+    ONB.publicou = true;
+    localStorage.setItem(CHAVE_ONB, JSON.stringify(ONB));
+    marcarEstado("ok");
+  }catch(e){
+    marcarEstado("erro");
+  }finally{ publicando = false; }
+}
+function marcarEstado(e){
+  const el = document.getElementById("estado"); if(!el) return;
+  const map = {
+    pendente:["⏳","Salvando…","var(--soft)"],
+    salvando:["⏳","Publicando…","var(--soft)"],
+    ok:["✅","Publicado","var(--ok)"],
+    erro:["⚠️","Sem conexão — salvo no aparelho","var(--brand)"]
+  };
+  const [i,t,c] = map[e] || map.ok;
+  el.innerHTML = `<span>${i}</span> ${t}`;
+  el.style.color = c;
+}
+function set(cam, val){
+  const p = cam.split("."); let o = DB;
+  for(let i=0;i<p.length-1;i++) o = o[p[i]];
+  o[p[p.length-1]] = val; salvar();
+}
+function pega(cam){ return cam.split(".").reduce((o,k)=>o?.[k], DB); }
+
+/* ---------- utilidades ---------- */
+const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const brl = v => "R$ " + (Number(v)||0).toFixed(2).replace(".",",");
+const num = v => { const n = parseFloat(String(v).replace(",",".")); return isNaN(n)?0:n; };
+function slug(s){
+  return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40) || "item";
+}
+function idUnico(base, lista){
+  let s = slug(base), i = 2;
+  while(lista.some(x=>x.id===s || x.key===s)){ s = slug(base)+"-"+i; i++; }
+  return s;
+}
+let tt; function toast(m){ const t=document.getElementById("tst"); t.textContent=m; t.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("on"),2100); }
+function verSite(){ window.open("index.html","_blank"); }
+function pintarTopo(){
+  document.getElementById("tNome").textContent = DB.loja.nome || "Minha Loja";
+  const l = document.getElementById("tLogo");
+  l.src = DB.loja.logo || "apple-touch-icon.png";
+}
+
+/* ---------- imagens: reduz e guarda dentro do arquivo ---------- */
+function pegarImagem(input, maxLado, cb){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  if(!/^image\//.test(f.type)){ toast("Escolha um arquivo de imagem"); return; }
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      let {width:w, height:h} = img;
+      const esc2 = Math.min(1, maxLado/Math.max(w,h));
+      w = Math.round(w*esc2); h = Math.round(h*esc2);
+      const c = document.createElement("canvas"); c.width=w; c.height=h;
+      c.getContext("2d").drawImage(img,0,0,w,h);
+      cb(c.toDataURL("image/jpeg",0.78));
+    };
+    img.onerror = () => toast("Não consegui abrir essa imagem");
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(f);
+}
+
+/* ==================================================================
+   PROGRESSO DA CONFIGURAÇÃO
+================================================================== */
+const TAREFAS = [
+  {id:"loja",  t:"Dados da loja",       d:"Nome, WhatsApp e endereço",            tela:"loja",       ok:()=>!!(DB.loja.nome && DB.loja.whatsapp)},
+  {id:"marca", t:"Logo e cores",        d:"Deixe com a cara da sua marca",        tela:"marca",      ok:()=>!!DB.loja.logo},
+  {id:"hora",  t:"Horário de atendimento", d:"Quando a loja abre e fecha",        tela:"horario",    ok:()=>DB.horario.dias.length>0},
+  {id:"ent",   t:"Entrega e pagamento", d:"Taxa, frete grátis e formas de pagar", tela:"entrega",    ok:()=>DB.entrega.ativa||DB.entrega.retirada},
+  {id:"cat",   t:"Criar categorias",    d:"Ex: Burgers, Bebidas, Sobremesas",     tela:"categorias", ok:()=>DB.categorias.length>0},
+  {id:"prod",  t:"Cadastrar produtos",  d:"No mínimo 3 pra loja não ficar vazia", tela:"produtos",   ok:()=>DB.produtos.length>=3},
+  {id:"pub",   t:"Divulgar o cardápio", d:"Pegue o link e o QR Code da sua loja", tela:"publicar",   ok:()=>!!ONB.publicou},
+];
+const feitas = () => TAREFAS.filter(t=>t.ok()).length;
+
+/* ==================================================================
+   MENU LATERAL
+================================================================== */
+const MENUS = [
+  {id:"inicio",     ic:"🏠", t:"Início"},
+  {id:"loja",       ic:"🏪", t:"Minha loja"},
+  {id:"marca",      ic:"🎨", t:"Marca e cores"},
+  {id:"categorias", ic:"📂", t:"Categorias"},
+  {id:"produtos",   ic:"🍔", t:"Produtos"},
+  {id:"opcoes",     ic:"⚙️", t:"Opções e extras"},
+  {id:"horario",    ic:"🕐", t:"Horário"},
+  {id:"entrega",    ic:"🛵", t:"Entrega"},
+  {id:"publicar",   ic:"🚀", t:"Divulgar"},
+];
+function pintarMenu(){
+  document.getElementById("side").innerHTML = MENUS.map(m=>{
+    const tf = TAREFAS.find(t=>t.tela===m.id);
+    const pend = tf && !tf.ok() ? `<span class="pend">!</span>` : "";
+    return `<button class="nav-i ${TELA===m.id?"on":""}" onclick="go('${m.id}')" style="position:relative">
+      <span class="ic">${m.ic}</span><span>${m.t}</span>${pend}</button>`;
+  }).join("");
+}
+function go(t){
+  TELA=t; pintarMenu(); pintar(); window.scrollTo({top:0,behavior:"smooth"});
+  fecharTour();
+  const fab = document.getElementById("tourFab");
+  fab.classList.toggle("show", !!TOURS[t]);
+  if(TOURS[t] && !(ONB.tourVisto||{})[t]) setTimeout(()=>iniciarTour(true), 450);
+}
+
+/* ==================================================================
+   TELAS
+================================================================== */
+function pintar(){
+  const m = document.getElementById("main");
+  m.innerHTML = ({
+    inicio:telaInicio, loja:telaLoja, marca:telaMarca, categorias:telaCategorias,
+    produtos:telaProdutos, opcoes:telaOpcoes, horario:telaHorario, entrega:telaEntrega, publicar:telaPublicar
+  })[TELA]();
+  pintarTopo();
+}
+
+/* ---------- INÍCIO ---------- */
+function telaInicio(){
+  const f = feitas(), tot = TAREFAS.length, pct = Math.round(f/tot*100);
+  const pronto = f===tot;
+  return `
+  <div class="card">
+    <h2>${pronto?"Sua loja está pronta 🎉":"Vamos deixar sua loja pronta"}</h2>
+    <div class="sub">${pronto
+      ? "Tudo configurado. Sempre que mudar preço ou produto, é só editar aqui e publicar de novo."
+      : "Siga a lista abaixo na ordem. Cada passo leva menos de 2 minutos e o painel te explica o que fazer."}</div>
+    <div class="prog"><i style="width:${pct}%"></i></div>
+    <div class="prog-t">${f} de ${tot} etapas concluídas · ${pct}%</div>
+    <div style="margin-top:18px">
+      ${TAREFAS.map(t=>`
+        <button class="ck ${t.ok()?"done":""}" onclick="go('${t.tela}')">
+          <span class="bx">✓</span>
+          <span class="tt"><b>${t.t}</b><small>${t.d}</small></span>
+          <span class="go">›</span>
+        </button>`).join("")}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Resumo do cardápio</h2>
+    <div class="sub">O que já está cadastrado hoje.</div>
+    <div class="r3">
+      ${[["Categorias",DB.categorias.length,"📂"],["Produtos",DB.produtos.filter(p=>p.ativo!==false).length,"🍔"],["Adicionais",DB.adicionais.filter(a=>a.ativo!==false).length,"➕"]]
+        .map(([t,v,e])=>`<div style="border:1px solid var(--line);border-radius:12px;padding:15px;text-align:center;background:#FBFAF8">
+          <div style="font-size:23px">${e}</div>
+          <div class="disp" style="font-size:27px;margin:3px 0">${v}</div>
+          <div style="font-size:12px;color:var(--soft);font-weight:600">${t}</div></div>`).join("")}
+    </div>
+    <button class="btn btn-g" style="width:100%;margin-top:14px" onclick="abrirWizard(0)">Refazer a configuração guiada</button>
+  </div>`;
+}
+
+/* ---------- MINHA LOJA ---------- */
+function telaLoja(){
+  const l = DB.loja;
+  return `
+  <div class="guia"><span class="gi">💡</span><div>
+    <b>Essas informações aparecem no topo do seu site.</b>
+    O WhatsApp é o mais importante: é pra ele que os pedidos dos clientes vão chegar.
+  </div></div>
+
+  <div class="card">
+    <h2>Minha loja</h2>
+    <div class="sub">Como sua loja se apresenta pro cliente.</div>
+
+    <div class="f"><label>Nome da loja</label>
+      <input class="in" placeholder="Ex: Burgueria 21" value="${esc(l.nome)}" oninput="set('loja.nome',this.value)">
+      <div class="hint">Aparece grandão no topo do site.</div></div>
+
+    <div class="f"><label>Frase da loja (opcional)</label>
+      <input class="in" placeholder="Ex: O melhor hambúrguer da cidade" value="${esc(l.slogan)}" oninput="set('loja.slogan',this.value)">
+    </div>
+
+    <div class="f"><label>WhatsApp que recebe os pedidos</label>
+      <div class="pre"><span>+55</span>
+        <input class="in" inputmode="numeric" placeholder="53 99999-9999" value="${esc(l.whatsapp.replace(/^55/,""))}"
+          oninput="set('loja.whatsapp','55'+this.value.replace(/\\D/g,''))"></div>
+      <div class="hint">Só DDD + número. Quando o cliente finalizar o pedido, a mensagem cai nesse número.</div></div>
+
+    <div class="f"><label>Endereço</label>
+      <input class="in" placeholder="Rua, número — Cidade/UF" value="${esc(l.endereco)}" oninput="set('loja.endereco',this.value)">
+      <div class="hint">Aparece no rodapé e no botão "Como chegar".</div></div>
+
+    <div class="f"><label>Link do Google Maps (opcional)</label>
+      <input class="in" placeholder="https://maps.google.com/?q=..." value="${esc(l.maps)}" oninput="set('loja.maps',this.value)">
+      <div class="hint">Abra sua loja no Google Maps, toque em Compartilhar e cole o link aqui.</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Texto "Sobre"</h2>
+    <div class="sub">Um parágrafo contando o que a sua loja tem de diferente. Aparece no final da página e ajuda a aparecer no Google.</div>
+    <div class="f"><label>Título</label>
+      <input class="in" placeholder="Ex: Sobre a Burgueria 21" value="${esc(l.sobreTitulo)}" oninput="set('loja.sobreTitulo',this.value)"></div>
+    <div class="f"><label>Texto</label>
+      <textarea class="in" placeholder="Conte como é o seu produto, o que usa de ingrediente, há quanto tempo existe..." oninput="set('loja.sobre',this.value)">${esc(l.sobre)}</textarea>
+      <div class="hint">Deixe uma linha em branco pra separar parágrafos.</div></div>
+  </div>`;
+}
+
+/* ---------- MARCA E CORES ---------- */
+const PALETAS = [
+  {n:"Vermelho brasa", c:{principal:"#C0392B",principalEscuro:"#8E2A20",destaque:"#E8A33D",fundo:"#FBF3E7",cartao:"#FFFDF8",texto:"#2A211E"}},
+  {n:"Preto e ouro",   c:{principal:"#1C1C1C",principalEscuro:"#000000",destaque:"#D4A017",fundo:"#F5F2EC",cartao:"#FFFFFF",texto:"#1A1A1A"}},
+  {n:"Verde fresco",   c:{principal:"#2E7D4F",principalEscuro:"#1E5C38",destaque:"#F2B705",fundo:"#F3F7F1",cartao:"#FFFFFF",texto:"#1F2A22"}},
+  {n:"Laranja fogo",   c:{principal:"#E4572E",principalEscuro:"#B23C1A",destaque:"#F3A712",fundo:"#FFF6EE",cartao:"#FFFFFF",texto:"#2B1D16"}},
+  {n:"Azul noite",     c:{principal:"#1F4E79",principalEscuro:"#143A5A",destaque:"#F0A500",fundo:"#F2F5F9",cartao:"#FFFFFF",texto:"#16212B"}},
+  {n:"Rosa doce",      c:{principal:"#C2185B",principalEscuro:"#8E0F42",destaque:"#F5A623",fundo:"#FDF3F6",cartao:"#FFFFFF",texto:"#2A1620"}},
+];
+function aplicarPaleta(i){ DB.cores = {...PALETAS[i].c}; salvar(); pintar(); toast("Cores aplicadas"); }
+function paletaAtiva(){ return PALETAS.findIndex(p=>p.c.principal.toLowerCase()===String(DB.cores.principal).toLowerCase()); }
+function telaMarca(){
+  const l=DB.loja, c=DB.cores, at=paletaAtiva();
+  const campo = (k,rot,dica) => `<div class="colorline" style="margin-bottom:9px">
+      <input type="color" value="${c[k]}" oninput="set('cores.${k}',this.value);document.getElementById('cc-${k}').textContent=this.value">
+      <span class="cl">${rot}<br><code id="cc-${k}">${c[k]}</code></span>
+      <span style="font-size:11.5px;color:var(--soft);max-width:46%;text-align:right;line-height:1.35">${dica}</span></div>`;
+  return `
+  <div class="guia"><span class="gi">💡</span><div>
+    <b>Aqui você deixa o site com a cara da sua marca.</b>
+    Escolha uma combinação pronta abaixo — é o jeito mais rápido e já fica bonito.
+    Se quiser, depois ajuste cor por cor.
+  </div></div>
+
+  <div class="card">
+    <h2>Logo da loja</h2>
+    <div class="sub">Aparece no topo do site e vira o ícone quando o cliente instala no celular. Use uma imagem quadrada.</div>
+    <div class="up">
+      <div class="pv">${l.logo?`<img src="${esc(l.logo)}" alt="">`:"🏪"}</div>
+      <div class="uc">
+        <p>Formato quadrado (ex: 512x512). PNG ou JPG.</p>
+        <label class="btn btn-g btn-sm" style="display:inline-block">
+          ${l.logo?"Trocar logo":"Escolher arquivo"}
+          <input type="file" accept="image/*" hidden onchange="pegarImagem(this,512,v=>{set('loja.logo',v);pintar();toast('Logo atualizada')})">
+        </label>
+        ${l.logo?`<button class="btn btn-dg btn-sm" style="margin-left:6px" onclick="set('loja.logo','');pintar()">Remover</button>`:""}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Foto de capa</h2>
+    <div class="sub">A foto grande do topo. Use uma imagem bem apetitosa — é a primeira coisa que o cliente vê.</div>
+    <div class="up wide">
+      <div class="pv">${l.capa?`<img src="${esc(l.capa)}" alt="">`:"📷"}</div>
+      <div class="uc" style="margin-top:11px">
+        <p>Formato deitado (ex: 1200x600).</p>
+        <label class="btn btn-g btn-sm" style="display:inline-block">
+          ${l.capa?"Trocar capa":"Escolher arquivo"}
+          <input type="file" accept="image/*" hidden onchange="pegarImagem(this,1200,v=>{set('loja.capa',v);pintar();toast('Capa atualizada')})">
+        </label>
+        ${l.capa?`<button class="btn btn-dg btn-sm" style="margin-left:6px" onclick="set('loja.capa','');pintar()">Remover</button>`:""}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Combinação de cores</h2>
+    <div class="sub">Escolha uma e o site inteiro muda na hora.</div>
+    <div class="pal">
+      ${PALETAS.map((p,i)=>`<button class="${at===i?"on":""}" onclick="aplicarPaleta(${i})">
+        <div class="bars"><i style="background:${p.c.principal}"></i><i style="background:${p.c.destaque}"></i><i style="background:${p.c.fundo}"></i></div>
+        <div class="nm">${p.n}</div></button>`).join("")}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Ajuste fino das cores</h2>
+    <div class="sub">Só mexa aqui se quiser usar exatamente as cores da sua marca.</div>
+    ${campo("principal","Cor principal","botões e títulos")}
+    ${campo("principalEscuro","Cor principal escura","quando aperta o botão")}
+    ${campo("destaque","Cor de destaque","ofertas e avisos")}
+    ${campo("fundo","Cor de fundo","fundo da página")}
+    ${campo("cartao","Cor dos cartões","fundo dos produtos")}
+    ${campo("texto","Cor do texto","letras da página")}
+  </div>`;
+}
+
+/* ---------- CATEGORIAS ---------- */
+function telaCategorias(){
+  const cs = DB.categorias;
+  return `
+  <div class="guia"><span class="gi">💡</span><div>
+    <b>Categoria é a divisão do seu cardápio.</b>
+    São aqueles botões que o cliente aperta pra pular direto pro que quer.
+    <ul>
+      <li>Crie primeiro as categorias, depois cadastre os produtos dentro delas.</li>
+      <li>Coloque em cima o que mais vende — é o que o cliente vê primeiro.</li>
+      <li>Marque "monta na hora" só nas categorias em que o cliente escolhe ponto da carne, adicionais e combo.</li>
+    </ul>
+  </div></div>
+
+  <div class="card">
+    <h2>Categorias <span style="font-weight:500;color:var(--soft);font-size:14px">(${cs.length})</span></h2>
+    <div class="sub">Arraste não precisa — use as setas pra mudar a ordem.</div>
+    ${cs.length ? cs.map((c,i)=>`
+      <div class="li" ${i===0?'id="tourPrimeiraCat"':""}>
+        <div class="th">${c.emoji||"📂"}</div>
+        <div class="tx"><b>${esc(c.nome)}</b>
+          <small>${DB.produtos.filter(p=>p.cat===c.key).length} produto(s)${c.montavel?" · monta na hora":""}${c.sub?" · "+esc(c.sub):""}</small></div>
+        <div class="ax">
+          <button class="ib" onclick="moverCat(${i},-1)" ${i===0?"disabled style=opacity:.3":""} title="Subir">↑</button>
+          <button class="ib" onclick="moverCat(${i},1)" ${i===cs.length-1?"disabled style=opacity:.3":""} title="Descer">↓</button>
+          <button class="ib" onclick="editarCat(${i})" title="Editar">✏️</button>
+          <button class="ib del" onclick="apagarCat(${i})" title="Excluir">🗑</button>
+        </div>
+      </div>`).join("")
+    : `<div class="vazio"><div class="em">📂</div>
+        <b>Nenhuma categoria ainda.</b><br>Comece criando uma — por exemplo <b>Burgers</b> ou <b>Bebidas</b>.</div>`}
+    <button class="btn btn-p" id="btnNovaCategoria" style="width:100%;margin-top:14px" onclick="editarCat(-1)">+ Criar categoria</button>
+  </div>`;
+}
+function moverCat(i,d){ const a=DB.categorias, j=i+d; if(j<0||j>=a.length)return; [a[i],a[j]]=[a[j],a[i]]; salvar(); pintar(); }
+function apagarCat(i){
+  const c = DB.categorias[i];
+  const n = DB.produtos.filter(p=>p.cat===c.key).length;
+  if(!confirm(`Excluir a categoria "${c.nome}"?` + (n?`\n\nOs ${n} produto(s) dentro dela também serão excluídos.`:""))) return;
+  DB.produtos = DB.produtos.filter(p=>p.cat!==c.key);
+  DB.categorias.splice(i,1); salvar(); pintar(); toast("Categoria excluída");
+}
+function editarCat(i){
+  const nova = i<0;
+  const c = nova ? {key:"",nome:"",sub:"",emoji:"📂",montavel:false} : {...DB.categorias[i]};
+  abrirModal(nova?"Nova categoria":"Editar categoria", `
+    ${nova?`<div class="guia" style="margin-bottom:16px"><span class="gi">✨</span><div>
+      Dê um nome curto e direto. É esse nome que vira o botãozinho lá em cima do cardápio.</div></div>`:""}
+    <div class="f"><label>Nome da categoria</label>
+      <input class="in" id="cN" placeholder="Ex: Burgers" value="${esc(c.nome)}"></div>
+    <div class="f"><label>Frase curta (opcional)</label>
+      <input class="in" id="cS" placeholder="Ex: na chapa · vira combo se quiser" value="${esc(c.sub)}">
+      <div class="hint">Aparece pequenininha do lado do nome.</div></div>
+    <div class="f"><label>Emojizinho</label>
+      <input class="in" id="cE" maxlength="4" style="width:88px;text-align:center;font-size:22px" value="${esc(c.emoji||"📂")}">
+      <div class="hint">Usado nos produtos que não têm foto.</div></div>
+    <button class="sw ${c.montavel?"on":""}" id="cM" onclick="this.classList.toggle('on')">
+      <span class="kn"></span>
+      <span class="tt"><b>O cliente monta na hora</b>
+      <small>Liga ponto da carne, adicionais e combo pros produtos dessa categoria. Use em lanches; deixe desligado em bebidas.</small></span>
+    </button>
+  `, () => {
+    const nome = document.getElementById("cN").value.trim();
+    if(!nome){ toast("Dê um nome pra categoria"); return false; }
+    const dados = { nome, sub:document.getElementById("cS").value.trim(),
+      emoji:document.getElementById("cE").value.trim()||"📂",
+      montavel:document.getElementById("cM").classList.contains("on") };
+    if(nova){
+      DB.categorias.push({ key:idUnico(nome,DB.categorias), ...dados });
+      toast("Categoria criada — agora cadastre os produtos dela");
+    } else {
+      DB.categorias[i] = { ...DB.categorias[i], ...dados };
+      toast("Categoria salva");
+    }
+    salvar(); pintar();
+  });
+}
+
+/* ---------- PRODUTOS ---------- */
+function telaProdutos(){
+  if(!DB.categorias.length) return `
+    <div class="card"><h2>Produtos</h2>
+      <div class="sub">Antes de cadastrar produtos, você precisa de pelo menos uma categoria.</div>
+      <div class="vazio"><div class="em">📂</div><b>Crie sua primeira categoria.</b><br>
+        É lá que os produtos vão morar.</div>
+      <button class="btn btn-p" style="width:100%;margin-top:14px" onclick="go('categorias')">Ir para Categorias</button>
+    </div>`;
+  return `
+  <div class="guia"><span class="gi">💡</span><div>
+    <b>Cada produto é um item do cardápio.</b>
+    <ul>
+      <li><b>Foto vende.</b> Produto com foto boa é escolhido muito mais. Tire a foto de cima, com boa luz.</li>
+      <li>Na descrição, liste os ingredientes — o cliente decide por ali.</li>
+      <li>Acabou o item hoje? Desative em vez de excluir. Ele some do site e volta com um clique.</li>
+    </ul>
+  </div></div>
+
+  ${DB.categorias.map((c,ci)=>{
+    const ps = DB.produtos.filter(p=>p.cat===c.key);
+    return `<div class="card grp">
+      <h3>${c.emoji||"📂"} ${esc(c.nome)} <span class="ct">${ps.length}</span></h3>
+      ${ps.length ? ps.map(p=>{
+        const gi = DB.produtos.indexOf(p);
+        const idx = ps.indexOf(p);
+        return `<div class="li ${p.ativo===false?"off":""}">
+          ${p.img?`<img class="th" src="${esc(p.img)}" alt="">`:`<div class="th">${c.emoji||"🍔"}</div>`}
+          <div class="tx"><b>${esc(p.n)}${p.ativo===false?" · pausado":""}</b><small>${esc(p.d)||"sem descrição"}</small></div>
+          <div class="pr">${brl(p.p)}</div>
+          <div class="ax">
+            <button class="ib" onclick="moverProd(${gi},-1)" ${idx===0?"disabled style=opacity:.3":""}>↑</button>
+            <button class="ib" onclick="moverProd(${gi},1)" ${idx===ps.length-1?"disabled style=opacity:.3":""}>↓</button>
+            <button class="ib" ${ci===0&&idx===0?'id="tourPausar"':""} onclick="togProd(${gi})" title="${p.ativo===false?"Ativar":"Pausar"}">${p.ativo===false?"▶":"⏸"}</button>
+            <button class="ib" onclick="editarProd(${gi})">✏️</button>
+            <button class="ib del" onclick="apagarProd(${gi})">🗑</button>
+          </div></div>`;
+      }).join("")
+      : `<div class="vazio" style="padding:20px"><b>Nenhum produto em ${esc(c.nome)}.</b><br>Cadastre o primeiro pra essa categoria aparecer no site.</div>`}
+      <button class="btn btn-g" ${ci===0?'id="tourNovoProduto"':""} style="width:100%;margin-top:11px" onclick="editarProd(-1,'${c.key}')">+ Adicionar em ${esc(c.nome)}</button>
+    </div>`;
+  }).join("")}`;
+}
+function togProd(i){ const p=DB.produtos[i]; p.ativo = p.ativo===false; salvar(); pintar(); toast(p.ativo===false?"Produto pausado":"Produto ativo de novo"); }
+function apagarProd(i){ if(!confirm(`Excluir "${DB.produtos[i].n}"?`))return; DB.produtos.splice(i,1); salvar(); pintar(); toast("Produto excluído"); }
+function moverProd(i,d){
+  const p = DB.produtos[i];
+  const irmaos = DB.produtos.filter(x=>x.cat===p.cat);
+  const pos = irmaos.indexOf(p), alvo = irmaos[pos+d];
+  if(!alvo) return;
+  const j = DB.produtos.indexOf(alvo);
+  [DB.produtos[i],DB.produtos[j]] = [DB.produtos[j],DB.produtos[i]];
+  salvar(); pintar();
+}
+let imgTemp = null;
+function editarProd(i, catPadrao){
+  const nova = i<0;
+  const p = nova ? {n:"",d:"",p:"",img:"",cat:catPadrao||DB.categorias[0].key,carne:false,ativo:true} : {...DB.produtos[i]};
+  imgTemp = p.img || "";
+  const cat = DB.categorias.find(c=>c.key===p.cat);
+  abrirModal(nova?"Novo produto":"Editar produto", `
+    <div class="f"><label>Foto do produto</label>
+      <div class="up">
+        <div class="pv" id="pPv">${imgTemp?`<img src="${esc(imgTemp)}">`:"📷"}</div>
+        <div class="uc">
+          <p>Foto boa aumenta muito a venda. Tire de cima, com luz natural.</p>
+          <label class="btn btn-g btn-sm" style="display:inline-block">Escolher foto
+            <input type="file" accept="image/*" hidden onchange="pegarImagem(this,700,v=>{imgTemp=v;document.getElementById('pPv').innerHTML='<img src=\\''+v+'\\'>'})">
+          </label>
+          <button class="btn btn-dg btn-sm" style="margin-left:6px" onclick="imgTemp='';document.getElementById('pPv').innerHTML='📷'">Sem foto</button>
+        </div>
+      </div>
+    </div>
+    <div class="f"><label>Nome</label>
+      <input class="in" id="pN" placeholder="Ex: Cheddar Bacon" value="${esc(p.n)}"></div>
+    <div class="f"><label>Descrição</label>
+      <textarea class="in" id="pD" style="min-height:76px" placeholder="Ex: blend 160g, cheddar derretido, bacon crocante e cebola no pão brioche">${esc(p.d)}</textarea>
+      <div class="hint">Liste os ingredientes. É o que faz o cliente escolher.</div></div>
+    <div class="r2">
+      <div class="f"><label>Preço (R$)</label>
+        <input class="in" id="pP" inputmode="decimal" placeholder="0,00" value="${p.p===""?"":String(p.p).replace(".",",")}"></div>
+      <div class="f"><label>Categoria</label>
+        <select class="in" id="pC">${DB.categorias.map(c=>`<option value="${c.key}" ${c.key===p.cat?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></div>
+    </div>
+    ${cat && cat.montavel ? `
+    <button class="sw ${p.carne?"on":""}" id="pCar" onclick="this.classList.toggle('on')">
+      <span class="kn"></span>
+      <span class="tt"><b>Perguntar o ponto da carne</b><small>Ligue só em burger de carne bovina. Em frango ou veggie, deixe desligado.</small></span>
+    </button>` : ""}
+    <button class="sw ${p.ativo!==false?"on":""}" id="pAt" onclick="this.classList.toggle('on')">
+      <span class="kn"></span>
+      <span class="tt"><b>Disponível pra venda</b><small>Desligue quando acabar o item. Ele some do site sem perder o cadastro.</small></span>
+    </button>
+  `, () => {
+    const n = document.getElementById("pN").value.trim();
+    if(!n){ toast("Dê um nome pro produto"); return false; }
+    const preco = num(document.getElementById("pP").value);
+    if(preco<=0){ toast("Coloque o preço do produto"); return false; }
+    const dados = {
+      n, d:document.getElementById("pD").value.trim(), p:preco,
+      cat:document.getElementById("pC").value, img:imgTemp||"",
+      carne: !!document.getElementById("pCar")?.classList.contains("on"),
+      ativo: document.getElementById("pAt").classList.contains("on")
+    };
+    if(nova){ DB.produtos.push({ id:idUnico(n,DB.produtos), ...dados }); toast("Produto cadastrado"); }
+    else { DB.produtos[i] = { ...DB.produtos[i], ...dados }; toast("Produto salvo"); }
+    salvar(); pintar();
+  });
+}
+
+/* ---------- OPÇÕES E EXTRAS ---------- */
+function telaOpcoes(){
+  const cb=DB.combo;
+  return `
+  <div class="guia"><span class="gi">💡</span><div>
+    <b>É aqui que o ticket médio sobe.</b>
+    Combo e adicionais fazem o mesmo cliente gastar mais sem esforço nenhum de venda.
+  </div></div>
+
+  <div class="card">
+    <h2>Combo</h2>
+    <div class="sub">Oferece batata + refri por um valor a mais na hora que o cliente monta o lanche.</div>
+    <button class="sw ${cb.ativo?"on":""}" onclick="set('combo.ativo',!DB.combo.ativo);pintar()">
+      <span class="kn"></span><span class="tt"><b>Oferecer combo</b><small>Aparece dentro da tela de montar o produto.</small></span></button>
+    ${cb.ativo?`
+      <div class="r2" style="margin-top:12px">
+        <div class="f"><label>Valor a mais (R$)</label>
+          <input class="in" inputmode="decimal" value="${String(cb.preco).replace(".",",")}" oninput="set('combo.preco',num(this.value))"></div>
+        <div class="f"><label>Nome do combo</label>
+          <input class="in" value="${esc(cb.label)}" oninput="set('combo.label',this.value)"></div>
+      </div>
+      <div class="f"><label>Frase da oferta</label>
+        <input class="in" value="${esc(cb.chamada)}" oninput="set('combo.chamada',this.value)">
+        <div class="hint">Fica assim no site: "${esc(cb.chamada)} <b>+${brl(cb.preco)}</b>".</div></div>`:""}
+  </div>
+
+  <div class="card">
+    <h2>Adicionais</h2>
+    <div class="sub">Extras que o cliente marca pra turbinar o lanche. Aparecem nas categorias que montam na hora.</div>
+    ${DB.adicionais.length ? DB.adicionais.map((a,i)=>`
+      <div class="li ${a.ativo===false?"off":""}">
+        <div class="th">➕</div>
+        <div class="tx"><b>${esc(a.n)}</b><small>${a.ativo===false?"pausado":"disponível"}</small></div>
+        <div class="pr">+ ${brl(a.p)}</div>
+        <div class="ax">
+          <button class="ib" onclick="DB.adicionais[${i}].ativo=DB.adicionais[${i}].ativo===false;salvar();pintar()">${a.ativo===false?"▶":"⏸"}</button>
+          <button class="ib" onclick="editarAdic(${i})">✏️</button>
+          <button class="ib del" onclick="if(confirm('Excluir ${esc(a.n)}?')){DB.adicionais.splice(${i},1);salvar();pintar()}">🗑</button>
+        </div></div>`).join("")
+    : `<div class="vazio"><div class="em">➕</div><b>Nenhum adicional.</b><br>Ex: Bacon +R$ 5, Cheddar extra +R$ 4, Ovo +R$ 3.</div>`}
+    <button class="btn btn-g" style="width:100%;margin-top:11px" onclick="editarAdic(-1)">+ Adicionar extra</button>
+  </div>
+
+  <div class="card">
+    <h2>Ponto da carne</h2>
+    <div class="sub">Opções que aparecem nos produtos marcados como "perguntar o ponto".</div>
+    ${DB.pontos.length ? DB.pontos.map((p,i)=>`
+      <div class="li"><div class="th">🔥</div>
+        <div class="tx"><b>${esc(p.n)}</b></div>
+        <div class="ax"><button class="ib del" onclick="DB.pontos.splice(${i},1);salvar();pintar()">🗑</button></div></div>`).join("")
+    : `<div class="vazio" style="padding:18px">Nenhum ponto cadastrado. Ex: Mal passada, Ao ponto, Bem passada.</div>`}
+    <div style="display:flex;gap:9px;margin-top:11px">
+      <input class="in" id="npt" placeholder="Ex: Ao ponto para mais" style="flex:1">
+      <button class="btn btn-g" onclick="addPonto()">Adicionar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Cupons de desconto</h2>
+    <div class="sub">Bom pra puxar cliente novo ou reativar quem sumiu. Divulgue no Instagram.</div>
+    ${DB.cupons.length ? DB.cupons.map((c,i)=>`
+      <div class="li ${c.ativo===false?"off":""}">
+        <div class="th">🎟</div>
+        <div class="tx"><b>${esc(c.codigo)}</b><small>${c.tipo==="percent"?c.valor+"% de desconto":brl(c.valor)+" de desconto"}</small></div>
+        <div class="ax">
+          <button class="ib" onclick="DB.cupons[${i}].ativo=DB.cupons[${i}].ativo===false;salvar();pintar()">${c.ativo===false?"▶":"⏸"}</button>
+          <button class="ib del" onclick="DB.cupons.splice(${i},1);salvar();pintar()">🗑</button>
+        </div></div>`).join("")
+    : `<div class="vazio" style="padding:18px">Nenhum cupom ativo.</div>`}
+    <button class="btn btn-g" style="width:100%;margin-top:11px" onclick="editarCupom()">+ Criar cupom</button>
+  </div>`;
+}
+function addPonto(){
+  const el=document.getElementById("npt"), v=el.value.trim();
+  if(!v) return;
+  DB.pontos.push({id:idUnico(v,DB.pontos), n:v}); salvar(); pintar();
+}
+function editarAdic(i){
+  const nova=i<0, a = nova?{n:"",p:""}:{...DB.adicionais[i]};
+  abrirModal(nova?"Novo adicional":"Editar adicional", `
+    <div class="f"><label>Nome</label><input class="in" id="aN" placeholder="Ex: Bacon" value="${esc(a.n)}"></div>
+    <div class="f"><label>Preço a mais (R$)</label>
+      <input class="in" id="aP" inputmode="decimal" placeholder="0,00" value="${a.p===""?"":String(a.p).replace(".",",")}"></div>
+  `, () => {
+    const n=document.getElementById("aN").value.trim(), p=num(document.getElementById("aP").value);
+    if(!n){ toast("Dê um nome"); return false; }
+    if(nova) DB.adicionais.push({id:idUnico(n,DB.adicionais), n, p, ativo:true});
+    else DB.adicionais[i]={...DB.adicionais[i], n, p};
+    salvar(); pintar(); toast("Adicional salvo");
+  });
+}
+function editarCupom(){
+  abrirModal("Novo cupom", `
+    <div class="guia" style="margin-bottom:16px"><span class="gi">🎟</span><div>
+      O cliente digita esse código no carrinho e ganha o desconto na hora.</div></div>
+    <div class="f"><label>Código</label>
+      <input class="in" id="kC" placeholder="Ex: PRIMEIRA10" style="text-transform:uppercase"></div>
+    <div class="r2">
+      <div class="f"><label>Tipo</label>
+        <select class="in" id="kT"><option value="percent">Porcentagem (%)</option><option value="valor">Valor fixo (R$)</option></select></div>
+      <div class="f"><label>Quanto</label>
+        <input class="in" id="kV" inputmode="decimal" placeholder="10"></div>
+    </div>
+  `, () => {
+    const c=document.getElementById("kC").value.trim().toUpperCase();
+    const t=document.getElementById("kT").value, v=num(document.getElementById("kV").value);
+    if(!c||v<=0){ toast("Preencha código e valor"); return false; }
+    DB.cupons.push({codigo:c, tipo:t, valor:v, label: t==="percent"?v+"% de desconto":brl(v)+" de desconto", ativo:true});
+    salvar(); pintar(); toast("Cupom criado");
+  });
+}
+
+/* ---------- HORÁRIO ---------- */
+const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+function togDia(d){
+  const a=DB.horario.dias, i=a.indexOf(d);
+  if(i>=0) a.splice(i,1); else a.push(d);
+  a.sort((x,y)=>x-y); salvar(); pintar();
+}
+function telaHorario(){
+  const h=DB.horario;
+  return `
+  <div class="guia"><span class="gi">💡</span><div>
+    <b>O site sabe sozinho se você está aberto.</b>
+    Fora do horário aparece um aviso e o cliente ainda pode montar o pedido pra enviar quando abrir —
+    assim você não perde a venda de madrugada.
+  </div></div>
+
+  <div class="card">
+    <h2>Dias que abre</h2>
+    <div class="sub">Toque nos dias em que a loja funciona.</div>
+    <div class="dias">${NOMES_DIA.map((n,d)=>`<button class="dia ${h.dias.includes(d)?"on":""}" onclick="togDia(${d})">${n}</button>`).join("")}</div>
+    ${!h.dias.length?`<div class="hint" style="color:var(--brand);margin-top:10px">Sem nenhum dia marcado, o site vai mostrar "fechado" sempre.</div>`:""}
+  </div>
+
+  <div class="card">
+    <h2>Horário</h2>
+    <div class="sub">Mesmo horário pra todos os dias marcados.</div>
+    <div class="r2">
+      <div class="f"><label>Abre às</label>
+        <input class="in" type="time" value="${h.abre}" oninput="set('horario.abre',this.value)"></div>
+      <div class="f"><label>Fecha às</label>
+        <input class="in" type="time" value="${h.fecha}" oninput="set('horario.fecha',this.value)"></div>
+    </div>
+    <div class="hint">Se você fecha depois da meia-noite, coloque 23:59 — o site continua aceitando pedido.</div>
+  </div>`;
+}
+
+/* ---------- ENTREGA ---------- */
+function telaEntrega(){
+  const e=DB.entrega, g=DB.pagamento;
+  return `
+  <div class="guia"><span class="gi">💡</span><div>
+    <b>Frete grátis acima de um valor é o truque mais fácil pra vender mais.</b>
+    O site mostra ao cliente quanto falta pra ganhar entrega grátis — e ele quase sempre coloca mais um item.
+  </div></div>
+
+  <div class="card">
+    <h2>Como o cliente recebe</h2>
+    <button class="sw ${e.ativa?"on":""}" onclick="set('entrega.ativa',!DB.entrega.ativa);pintar()">
+      <span class="kn"></span><span class="tt"><b>Faço entrega</b><small>O cliente informa o endereço no pedido.</small></span></button>
+    <button class="sw ${e.retirada?"on":""}" onclick="set('entrega.retirada',!DB.entrega.retirada);pintar()">
+      <span class="kn"></span><span class="tt"><b>Retirada no balcão</b><small>O cliente busca na loja.</small></span></button>
+  </div>
+
+  ${e.ativa?`
+  <div class="card">
+    <h2>Taxa de entrega</h2>
+    <div class="r2">
+      <div class="f"><label>Valor da taxa (R$)</label>
+        <input class="in" inputmode="decimal" value="${String(e.taxa).replace(".",",")}" oninput="set('entrega.taxa',num(this.value))">
+        <div class="hint">Coloque 0 se a entrega é sempre grátis.</div></div>
+      <div class="f"><label>Frete grátis acima de (R$)</label>
+        <input class="in" inputmode="decimal" value="${String(e.gratisAcima).replace(".",",")}" oninput="set('entrega.gratisAcima',num(this.value))">
+        <div class="hint">Sugestão: um pouco acima do seu ticket médio.</div></div>
+    </div>
+  </div>`:""}
+
+  <div class="card">
+    <h2>Formas de pagamento</h2>
+    <div class="sub">O pagamento é combinado no WhatsApp. Aqui você só marca o que aceita.</div>
+    ${[["pix","PIX","Mais rápido e sem taxa de máquina."],["dinheiro","Dinheiro","O cliente informa o troco no pedido."],["cartao","Cartão","Na entrega, com a maquininha."]]
+      .map(([k,t,d])=>`<button class="sw ${g[k]?"on":""}" onclick="set('pagamento.${k}',!DB.pagamento.${k});pintar()">
+        <span class="kn"></span><span class="tt"><b>${t}</b><small>${d}</small></span></button>`).join("")}
+  </div>`;
+}
+
+/* ---------- PUBLICAR ---------- */
+function baixarDados(){
+  const blob = new Blob([JSON.stringify(DB,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "dados.json";
+  a.click(); URL.revokeObjectURL(a.href);
+  toast("Cópia de segurança salva");
+}
+function telaPublicar(){
+  const f = feitas(), tot = TAREFAS.length;
+  const falta = TAREFAS.filter(t=>!t.ok() && t.id!=="pub");
+  const wa = DB.loja.whatsapp;
+  const link = location.href.replace(/admin\.html.*$/,"");
+  return `
+  <div class="card">
+    <h2>${f===tot?"Tudo no ar 🚀":"Seu cardápio"}</h2>
+    <div class="sub">Não precisa fazer nada para publicar: <b>tudo que você edita aqui vai pro ar sozinho</b>, em segundos.</div>
+    ${falta.length?`<div class="guia" style="background:#FDF0EE;border-color:#F6DCD8;color:#7a3229">
+      <span class="gi">⚠️</span><div><b>Ainda falta configurar:</b>
+      <ul>${falta.map(t=>`<li>${t.t}</li>`).join("")}</ul></div></div>`
+    :`<div class="guia" style="background:var(--okbg);border-color:#BFE0C6;color:#2c5c39">
+      <span class="gi">✅</span><div><b>Cardápio publicado e recebendo pedidos.</b>
+      Toda alteração aparece pro cliente na hora.</div></div>`}
+    <button class="btn btn-g" style="width:100%" onclick="publicarAgora().then(()=>toast('Cardápio republicado'))">
+      Publicar de novo agora</button>
+  </div>
+
+  <div class="card">
+    <h2>Divulgar sua loja</h2>
+    <div class="sub">Cole esses links no Instagram, no status do WhatsApp e nos anúncios.</div>
+    <div class="linkbox"><code id="lk1">${esc(link)}</code>
+      <button class="btn btn-g btn-sm" onclick="copiar('lk1')">Copiar</button></div>
+    ${wa?`<div class="linkbox"><code id="lk2">https://wa.me/${esc(wa)}</code>
+      <button class="btn btn-g btn-sm" onclick="copiar('lk2')">Copiar</button></div>
+      <div class="hint">Link direto pro WhatsApp da loja.</div>`:""}
+    <div class="f" style="margin-top:16px"><label>QR Code do cardápio</label>
+      <div style="text-align:center;background:#FBFAF8;border:1px solid var(--line);border-radius:12px;padding:18px">
+        <img id="qr" alt="QR Code" style="width:190px;height:190px;margin:0 auto;background:#fff;border-radius:10px"
+          src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&margin=10&data=${encodeURIComponent(link)}">
+        <div class="hint" style="margin-top:10px">Imprima e cole no balcão, na mesa ou na embalagem.
+          O cliente aponta a câmera e o cardápio abre.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Mensagens automáticas do WhatsApp</h2>
+    <div class="sub">No painel de pedidos, quando você muda o status, aparece um botão pra avisar o cliente com esse texto pronto.</div>
+    <div class="guia"><span class="gi">💡</span><div>
+      Você pode usar <b>{nome}</b>, <b>{codigo}</b>, <b>{total}</b> e <b>{entrega}</b> — o sistema troca pelos dados reais do pedido.
+    </div></div>
+    ${[["preparo","Quando aceita o pedido"],["pronto","Quando fica pronto"],
+       ["entregue","Quando entrega"],["recusado","Quando recusa"]].map(([k,t])=>`
+      <div class="f"><label>${t}</label>
+        <textarea class="in" style="min-height:64px" oninput="setMsg('${k}',this.value)"
+          placeholder="Deixe em branco pra só abrir a conversa">${esc(msgAtual(k))}</textarea></div>`).join("")}
+    <button class="btn btn-g btn-sm" onclick="DB.mensagens={};salvar();pintar();toast('Textos voltaram ao padrão')">
+      Voltar aos textos padrão</button>
+  </div>
+
+  <div class="card">
+    <h2>Fazer uma cópia de segurança</h2>
+    <div class="sub">Guarde o arquivo do seu cardápio. Se trocar de computador ou limpar o navegador, é só carregar de volta.</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-g" onclick="baixarDados()">Salvar cópia</button>
+      <label class="btn btn-g" style="display:inline-block">Carregar cópia
+        <input type="file" accept="application/json,.json" hidden onchange="importar(this)"></label>
+      <button class="btn btn-dg" onclick="zerar()">Começar do zero</button>
+    </div>
+  </div>`;
+}
+const MSG_PADRAO = {
+  preparo:  "Oi {nome}! Recebemos seu pedido {codigo} e já colocamos na chapa. 🍔",
+  pronto:   "{nome}, seu pedido {codigo} está pronto! {entrega}",
+  entregue: "Pedido {codigo} entregue. Valeu pela preferência! 🙏",
+  recusado: "Oi {nome}, não vamos conseguir atender o pedido {codigo} agora. Desculpa!"
+};
+function msgAtual(k){
+  const m = DB.mensagens || {};
+  return m[k] !== undefined ? m[k] : MSG_PADRAO[k];
+}
+function setMsg(k, v){
+  DB.mensagens = DB.mensagens || {};
+  DB.mensagens[k] = v;
+  salvar();
+}
+function copiar(id){
+  const t = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(t).then(()=>toast("Link copiado")).catch(()=>toast("Copie manualmente: "+t));
+}
+function importar(input){
+  const f = input.files && input.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try{
+      DB = normalizar(JSON.parse(e.target.result));
+      salvar(); pintar(); toast("Cardápio carregado");
+    }catch(err){ toast("Arquivo inválido"); }
+  };
+  r.readAsText(f);
+}
+function zerar(){
+  if(!confirm("Isso apaga TODO o cardápio e as configurações deste navegador.\n\nTem certeza?")) return;
+  localStorage.removeItem(CHAVE); localStorage.removeItem(CHAVE_ONB);
+  location.reload();
+}
+
+/* ==================================================================
+   TOUR — destaca o elemento de verdade na tela e explica o que fazer.
+   Reaparece sozinho na primeira vez que o dono entra em cada tela, e
+   pode ser reaberto a qualquer momento pelo botão "🎓 Tutorial".
+================================================================== */
+const TOURS = {
+  categorias: [
+    {sel:"#btnNovaCategoria", tit:"Crie uma categoria", tx:"Toque aqui pra criar. Categoria organiza o cardápio — ex: Burgers, Bebidas, Sobremesas."},
+    {sel:"#tourPrimeiraCat",  tit:"Suas categorias ficam aqui", tx:"Use as setas ↑↓ pra reordenar e o lápis pra editar. A ordem daqui é a mesma que aparece no site."},
+    {sel:"[onclick=\"go('produtos')\"]", tit:"Agora vá em Produtos", tx:"Com as categorias prontas, é hora de cadastrar os itens dentro de cada uma."}
+  ],
+  produtos: [
+    {sel:"#tourNovoProduto", tit:"Cadastre um produto", tx:"Toque aqui pra adicionar um item nessa categoria: nome, foto, descrição e preço."},
+    {sel:"#tourPausar", tit:"Acabou o estoque?", tx:"Pause em vez de excluir. O produto some do site na hora e volta com 1 toque quando repor."},
+    {sel:"[onclick=\"go('opcoes')\"]", tit:"Depois, vá em Opções", tx:"Lá você cria adicionais, o combo e cupons de desconto pra vender mais em cada pedido."}
+  ]
+};
+let tourPassos = [], tourIdx = 0, tourReposicionar = null;
+function iniciarTour(auto){
+  const base = TOURS[TELA]; if(!base) return;
+  tourPassos = base.filter(p=>document.querySelector(p.sel));
+  if(!tourPassos.length) return;
+  tourIdx = 0;
+  mostrarPassoTour();
+}
+function mostrarPassoTour(){
+  if(tourIdx>=tourPassos.length){ fecharTour(true); return; }
+  const p = tourPassos[tourIdx];
+  const el = document.querySelector(p.sel);
+  if(!el){ tourIdx++; mostrarPassoTour(); return; }
+  el.scrollIntoView({block:"center", behavior:"smooth"});
+  clearTimeout(tourReposicionar);
+  tourReposicionar = setTimeout(()=>desenharTour(el,p), 280);
+}
+function desenharTour(el,p){
+  const r = el.getBoundingClientRect();
+  const hole = document.getElementById("tourHole");
+  hole.style.left=(r.left-6)+"px"; hole.style.top=(r.top-6)+"px";
+  hole.style.width=(r.width+12)+"px"; hole.style.height=(r.height+12)+"px";
+  hole.style.display="block";
+
+  const bub = document.getElementById("tourBubble");
+  const ult = tourIdx===tourPassos.length-1;
+  bub.innerHTML = `
+    <div class="tp">Passo ${tourIdx+1} de ${tourPassos.length}</div>
+    <h4>${p.tit}</h4><p>${p.tx}</p>
+    <div class="tf">
+      <div class="esq">${tourIdx>0?`<button class="tour-back" onclick="tourIdx--;mostrarPassoTour()">Voltar</button>`:""}
+        <button class="tour-skip" onclick="fecharTour(true)">Pular tour</button></div>
+      <button class="tour-nav" onclick="tourIdx++;mostrarPassoTour()">${ult?"Concluir":"Próximo →"}</button>
+    </div>`;
+  bub.style.display = "block";
+  const abaixo = window.innerHeight - r.bottom > 190;
+  bub.style.top = (abaixo ? r.bottom+14 : Math.max(14, r.top-14-bub.offsetHeight)) + "px";
+  bub.style.left = Math.min(window.innerWidth-bub.offsetWidth-14, Math.max(14, r.left)) + "px";
+}
+function fecharTour(concluiu){
+  document.getElementById("tourHole").style.display="none";
+  document.getElementById("tourBubble").style.display="none";
+  if(concluiu && TOURS[TELA]){
+    ONB.tourVisto = ONB.tourVisto || {};
+    ONB.tourVisto[TELA] = true;
+    localStorage.setItem(CHAVE_ONB, JSON.stringify(ONB));
+  }
+}
+window.addEventListener("resize", ()=>{ if(tourPassos.length && document.getElementById("tourBubble").style.display==="block") desenharTour(document.querySelector(tourPassos[tourIdx]?.sel||""), tourPassos[tourIdx]); });
+
+/* ==================================================================
+   MODAL
+================================================================== */
+let salvarModal = null;
+function abrirModal(titulo, corpo, aoSalvar){
+  document.getElementById("mdT").textContent = titulo;
+  document.getElementById("mdB").innerHTML = corpo;
+  document.getElementById("mdF").innerHTML =
+    `<button class="btn btn-g" onclick="fecharModal()">Cancelar</button>
+     <button class="btn btn-p" onclick="confirmarModal()">Salvar</button>`;
+  salvarModal = aoSalvar;
+  document.getElementById("ov").classList.add("on");
+  document.getElementById("md").classList.add("on");
+  document.body.style.overflow = "hidden";
+}
+function confirmarModal(){ if(salvarModal && salvarModal()===false) return; fecharModal(); }
+function fecharModal(){
+  document.getElementById("ov").classList.remove("on");
+  document.getElementById("md").classList.remove("on");
+  document.body.style.overflow = ""; salvarModal = null;
+}
+
+/* ==================================================================
+   CONFIGURAÇÃO GUIADA (passo a passo da primeira vez)
+================================================================== */
+let wzP = 0;
+const PASSOS = [
+  {
+    t:"Bem-vindo", em:"👋",
+    tit:"Vamos montar sua loja online",
+    lead:"São 7 perguntas rápidas. No fim você já tem um cardápio funcionando, com pedido caindo direto no seu WhatsApp. Pode parar no meio e continuar depois — tudo fica salvo.",
+    corpo:()=>`<div class="guia"><span class="gi">⏱</span><div>
+      Leva uns <b>5 minutos</b>. Tenha por perto: a <b>logo</b> da loja, o <b>número de WhatsApp</b> e as <b>fotos</b> dos produtos principais.</div></div>`,
+    ok:()=>true
+  },
+  {
+    t:"Sua loja", em:"🏪",
+    tit:"Como sua loja se chama?",
+    lead:"É o nome que vai aparecer grandão no topo do site.",
+    corpo:()=>`
+      <div class="f"><label>Nome da loja</label>
+        <input class="in" id="w1" placeholder="Ex: Burgueria 21" value="${esc(DB.loja.nome)}" oninput="set('loja.nome',this.value)"></div>
+      <div class="f"><label>Frase da loja (opcional)</label>
+        <input class="in" placeholder="Ex: O melhor hambúrguer da cidade" value="${esc(DB.loja.slogan)}" oninput="set('loja.slogan',this.value)"></div>`,
+    ok:()=>DB.loja.nome.trim() ? true : "Digite o nome da sua loja"
+  },
+  {
+    t:"WhatsApp", em:"📱",
+    tit:"Pra qual WhatsApp vão os pedidos?",
+    lead:"Quando o cliente finaliza, o pedido chega formatadinho nesse número. Use o número que fica sempre com você ou com a cozinha.",
+    corpo:()=>`
+      <div class="f"><label>Número com DDD</label>
+        <div class="pre"><span>+55</span>
+          <input class="in" inputmode="numeric" placeholder="53 99999-9999" value="${esc(DB.loja.whatsapp.replace(/^55/,""))}"
+            oninput="set('loja.whatsapp','55'+this.value.replace(/\\D/g,''))"></div></div>
+      <div class="f"><label>Endereço da loja</label>
+        <input class="in" placeholder="Rua, número — Cidade/UF" value="${esc(DB.loja.endereco)}" oninput="set('loja.endereco',this.value)">
+        <div class="hint">Aparece no rodapé. Se você só entrega, pode deixar a região.</div></div>`,
+    ok:()=>DB.loja.whatsapp.replace(/^55/,"").length>=10 ? true : "Digite o WhatsApp com DDD"
+  },
+  {
+    t:"Sua marca", em:"🎨",
+    tit:"Deixe com a cara da sua marca",
+    lead:"Escolha as cores e coloque sua logo. É o que faz o site parecer seu — e não um modelo genérico.",
+    corpo:()=>`
+      <div class="f"><label>Logo</label>
+        <div class="up">
+          <div class="pv" id="wLg">${DB.loja.logo?`<img src="${esc(DB.loja.logo)}">`:"🏪"}</div>
+          <div class="uc"><p>Imagem quadrada. Se não tiver agora, pode pular e colocar depois.</p>
+            <label class="btn btn-g btn-sm" style="display:inline-block">Escolher logo
+              <input type="file" accept="image/*" hidden onchange="pegarImagem(this,512,v=>{set('loja.logo',v);document.getElementById('wLg').innerHTML='<img src=\\''+v+'\\'>'})">
+            </label></div>
+        </div></div>
+      <div class="f"><label>Combinação de cores</label>
+        <div class="pal">${PALETAS.map((p,i)=>`<button class="${paletaAtiva()===i?"on":""}" onclick="DB.cores={...PALETAS[${i}].c};salvar();wzPintar()">
+          <div class="bars"><i style="background:${p.c.principal}"></i><i style="background:${p.c.destaque}"></i><i style="background:${p.c.fundo}"></i></div>
+          <div class="nm">${p.n}</div></button>`).join("")}</div></div>`,
+    ok:()=>true
+  },
+  {
+    t:"Funcionamento", em:"🕐",
+    tit:"Quando você atende?",
+    lead:"O site mostra sozinho se está aberto ou fechado, e avisa o cliente que horas você abre.",
+    corpo:()=>`
+      <div class="f"><label>Dias que abre</label>
+        <div class="dias">${NOMES_DIA.map((n,d)=>`<button class="dia ${DB.horario.dias.includes(d)?"on":""}" onclick="togDia(${d});wzPintar()">${n}</button>`).join("")}</div></div>
+      <div class="r2">
+        <div class="f"><label>Abre às</label><input class="in" type="time" value="${DB.horario.abre}" oninput="set('horario.abre',this.value)"></div>
+        <div class="f"><label>Fecha às</label><input class="in" type="time" value="${DB.horario.fecha}" oninput="set('horario.fecha',this.value)"></div>
+      </div>
+      <button class="sw ${DB.entrega.ativa?"on":""}" onclick="set('entrega.ativa',!DB.entrega.ativa);wzPintar()">
+        <span class="kn"></span><span class="tt"><b>Faço entrega</b><small>O cliente digita o endereço no pedido.</small></span></button>
+      ${DB.entrega.ativa?`<div class="r2">
+        <div class="f"><label>Taxa de entrega (R$)</label>
+          <input class="in" inputmode="decimal" value="${String(DB.entrega.taxa).replace(".",",")}" oninput="set('entrega.taxa',num(this.value))"></div>
+        <div class="f"><label>Frete grátis acima de (R$)</label>
+          <input class="in" inputmode="decimal" value="${String(DB.entrega.gratisAcima).replace(".",",")}" oninput="set('entrega.gratisAcima',num(this.value))"></div>
+      </div>`:""}`,
+    ok:()=>DB.horario.dias.length ? true : "Marque pelo menos um dia"
+  },
+  {
+    t:"Categorias", em:"📂",
+    tit:"Divida seu cardápio",
+    lead:"Categoria é o que separa o cardápio: Burgers, Bebidas, Sobremesas… Toque nas sugestões abaixo pra criar rapidinho.",
+    corpo:()=>{
+      const sug = [["Burgers","🍔",true],["Porções","🍟",false],["Bebidas","🥤",false],["Sobremesas","🍰",false],["Combos","🎉",true],["Pizzas","🍕",true]];
+      return `
+      <div class="f"><label>Sugestões — toque pra criar</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${sug.map(([n,e,m])=>{
+            const existe = DB.categorias.some(c=>c.nome.toLowerCase()===n.toLowerCase());
+            return `<button class="btn ${existe?"btn-ok":"btn-g"} btn-sm" ${existe?"disabled":""}
+              onclick="DB.categorias.push({key:idUnico('${n}',DB.categorias),nome:'${n}',sub:'',emoji:'${e}',montavel:${m}});salvar();wzPintar()">
+              ${existe?"✓ ":""}${e} ${n}</button>`;
+          }).join("")}
+        </div></div>
+      <div class="f"><label>Ou crie com o nome que quiser</label>
+        <div style="display:flex;gap:9px">
+          <input class="in" id="wCat" placeholder="Nome da categoria" style="flex:1">
+          <button class="btn btn-g" onclick="wzAddCat()">Criar</button></div></div>
+      <div class="f"><label>Suas categorias (${DB.categorias.length})</label>
+        ${DB.categorias.length ? DB.categorias.map((c,i)=>`<div class="li">
+          <div class="th">${c.emoji||"📂"}</div><div class="tx"><b>${esc(c.nome)}</b>
+          <small>${c.montavel?"cliente monta na hora":"item simples"}</small></div>
+          <div class="ax"><button class="ib del" onclick="DB.categorias.splice(${i},1);salvar();wzPintar()">🗑</button></div></div>`).join("")
+        : `<div class="vazio" style="padding:18px">Nenhuma ainda — toque numa sugestão acima.</div>`}</div>`;
+    },
+    ok:()=>DB.categorias.length ? true : "Crie pelo menos uma categoria"
+  },
+  {
+    t:"Produtos", em:"🍔",
+    tit:"Cadastre seus primeiros produtos",
+    lead:"Coloque pelo menos os 3 que mais vendem. Depois você adiciona o resto com calma pelo painel.",
+    corpo:()=>`
+      ${DB.categorias.map(c=>{
+        const ps = DB.produtos.filter(p=>p.cat===c.key);
+        return `<div class="f"><label>${c.emoji||"📂"} ${esc(c.nome)} (${ps.length})</label>
+          ${ps.map(p=>`<div class="li">
+            ${p.img?`<img class="th" src="${esc(p.img)}">`:`<div class="th">${c.emoji||"🍔"}</div>`}
+            <div class="tx"><b>${esc(p.n)}</b><small>${esc(p.d)||"sem descrição"}</small></div>
+            <div class="pr">${brl(p.p)}</div>
+            <div class="ax"><button class="ib del" onclick="DB.produtos.splice(${DB.produtos.indexOf(p)},1);salvar();wzPintar()">🗑</button></div>
+          </div>`).join("")}
+          <button class="btn btn-g btn-sm" style="width:100%;margin-top:5px" onclick="wzProd('${c.key}')">+ Adicionar em ${esc(c.nome)}</button>
+        </div>`;
+      }).join("")}
+      <div class="guia"><span class="gi">📸</span><div>
+        <b>Dica que vale dinheiro:</b> produto com foto vende quase o dobro.
+        Tire a foto de cima, perto da janela, sem flash.</div></div>`,
+    ok:()=>DB.produtos.length ? true : "Cadastre pelo menos um produto"
+  },
+  {
+    t:"Pronto", em:"🎉",
+    tit:"Sua loja está no ar",
+    lead:"É isso. Seu cardápio já funciona e os pedidos vão cair no seu WhatsApp.",
+    corpo:()=>`
+      <div class="guia" style="background:var(--okbg);border-color:#BFE0C6;color:#2c5c39"><span class="gi">✅</span><div>
+        <b>${esc(DB.loja.nome)}</b> · ${DB.categorias.length} categoria(s) · ${DB.produtos.length} produto(s)</div></div>
+      <div class="f"><label>E agora?</label>
+        <ol class="steps">
+          <li>Toque em <b>Ver meu site</b> e confira como ficou.</li>
+          <li>Vá em <b>Publicar</b> e baixe o arquivo do cardápio pra colocar no ar.</li>
+          <li>Cole o link do site na bio do Instagram e no status do WhatsApp.</li>
+        </ol></div>
+      <div class="guia"><span class="gi">💡</span><div>
+        Sempre que mudar um preço ou acabar um item, é só entrar aqui e editar. Leva 10 segundos.</div></div>`,
+    ok:()=>true
+  }
+];
+function wzAddCat(){
+  const el=document.getElementById("wCat"), v=el.value.trim();
+  if(!v) return;
+  DB.categorias.push({key:idUnico(v,DB.categorias), nome:v, sub:"", emoji:"📂", montavel:false});
+  salvar(); wzPintar();
+}
+function wzProd(catKey){
+  imgTemp = "";
+  abrirModal("Novo produto", `
+    <div class="f"><label>Foto (opcional agora)</label>
+      <div class="up"><div class="pv" id="pPv">📷</div>
+        <div class="uc"><p>Pode adicionar depois, mas com foto vende bem mais.</p>
+          <label class="btn btn-g btn-sm" style="display:inline-block">Escolher foto
+            <input type="file" accept="image/*" hidden onchange="pegarImagem(this,700,v=>{imgTemp=v;document.getElementById('pPv').innerHTML='<img src=\\''+v+'\\'>'})">
+          </label></div></div></div>
+    <div class="f"><label>Nome</label><input class="in" id="pN" placeholder="Ex: Cheddar Bacon"></div>
+    <div class="f"><label>Descrição</label>
+      <textarea class="in" id="pD" style="min-height:70px" placeholder="Ingredientes do produto"></textarea></div>
+    <div class="f"><label>Preço (R$)</label><input class="in" id="pP" inputmode="decimal" placeholder="0,00"></div>
+  `, () => {
+    const n=document.getElementById("pN").value.trim(), p=num(document.getElementById("pP").value);
+    if(!n){ toast("Dê um nome"); return false; }
+    if(p<=0){ toast("Coloque o preço"); return false; }
+    const cat = DB.categorias.find(c=>c.key===catKey);
+    DB.produtos.push({ id:idUnico(n,DB.produtos), cat:catKey, n, d:document.getElementById("pD").value.trim(),
+      p, img:imgTemp||"", carne: !!(cat&&cat.montavel), ativo:true });
+    salvar(); wzPintar(); toast("Produto cadastrado");
+  });
+}
+function abrirWizard(p){
+  wzP = p||0; ONB.feito = false;
+  document.getElementById("wz").classList.add("on");
+  document.body.style.overflow = "hidden";
+  wzPintar();
+}
+function fecharWizard(concluiu){
+  ONB.feito = true; ONB.passo = wzP; salvar();
+  document.getElementById("wz").classList.remove("on");
+  document.body.style.overflow = "";
+  go(concluiu ? "inicio" : TELA);
+  if(concluiu) toast("Configuração concluída 🎉");
+}
+function wzPintar(){
+  const p = PASSOS[wzP];
+  document.getElementById("wzSt").textContent = `Passo ${wzP+1} de ${PASSOS.length} · ${p.t}`;
+  document.getElementById("wzPc").textContent = Math.round((wzP)/(PASSOS.length-1)*100)+"%";
+  document.getElementById("wzBar").style.width = ((wzP)/(PASSOS.length-1)*100)+"%";
+  document.getElementById("wzB").innerHTML =
+    `<div class="em">${p.em}</div><h2>${p.tit}</h2><div class="lead">${p.lead}</div>${p.corpo()}`;
+  const ult = wzP===PASSOS.length-1;
+  document.getElementById("wzF").innerHTML = `
+    ${wzP>0?`<button class="btn btn-g" onclick="wzVoltar()">Voltar</button>`:""}
+    <button class="btn btn-p" onclick="${ult?"fecharWizard(true)":"wzAvancar()"}">${ult?"Ir para o painel":"Continuar"}</button>
+    ${!ult?`<button class="wz-skip" onclick="fecharWizard(false)">pular</button>`:""}`;
+  document.querySelector(".wz-body").scrollTop = 0;
+}
+function wzAvancar(){
+  const v = PASSOS[wzP].ok();
+  if(v!==true){ toast(v); return; }
+  wzP++; ONB.passo = wzP; salvar(); wzPintar();
+}
+function wzVoltar(){ if(wzP>0){ wzP--; wzPintar(); } }
+
+/* ==================================================================
+   INICIAR
+================================================================== */
+(async function(){
+  await carregar();
+  pintarMenu(); pintar();
+  const semNada = !DB.loja.nome && !DB.produtos.length;
+  if(!ONB.feito && semNada) abrirWizard(ONB.passo||0);
+})();
+</script>
+</body>
+</html>

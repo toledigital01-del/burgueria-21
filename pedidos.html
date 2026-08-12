@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="./">
+<title>Pedidos — painel da cozinha</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F2EF; --panel:#fff; --line:#E5E0D8; --ink:#1F1A17; --soft:#7A6E64;
+  --novo:#E8A33D; --novo-bg:#FFF8EC; --preparo:#2F6FED; --preparo-bg:#EEF3FE;
+  --pronto:#2E9E5B; --pronto-bg:#EDF8F1; --fim:#8A8078; --fim-bg:#F4F2EF;
+  --dg:#C0392B; --zap:#25D366;
+  --r:16px; --sh:0 4px 16px rgba(50,35,25,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+  font-size:15px;padding-bottom:40px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit;font-size:15px}
+img{display:block;max-width:100%}
+
+/* ---------- TOPO ---------- */
+.top{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(50,35,25,.06)}
+.top-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:11px 15px}
+.top .mk{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.top .mk img{width:38px;height:38px;border-radius:10px;object-fit:cover;border:1px solid var(--line);background:#f1ece5}
+.top .mk b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:38vw}
+.top .mk small{font-size:11.5px;color:var(--soft);display:flex;align-items:center;gap:5px}
+.live{width:7px;height:7px;border-radius:50%;background:var(--pronto);animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.ic-btn{width:42px;height:42px;border-radius:11px;border:1.5px solid var(--line);background:#fff;font-size:18px;
+  display:flex;align-items:center;justify-content:center;position:relative;flex:none;transition:.14s}
+.ic-btn:hover{background:#F5F2ED}
+.ic-btn.mudo{background:#FDF0EE;border-color:#F3D9D4}
+.ic-btn .bad{position:absolute;top:-5px;right:-5px;background:var(--dg);color:#fff;font-size:10.5px;font-weight:800;
+  border-radius:99px;min-width:19px;height:19px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+
+/* ---------- ABAS ---------- */
+.abas{position:sticky;top:62px;z-index:45;background:var(--bg);padding:12px 15px 8px;border-bottom:1px solid transparent}
+.abas-in{max-width:1120px;margin:0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.abas-in::-webkit-scrollbar{display:none}
+.aba{display:flex;align-items:center;gap:7px;white-space:nowrap;border:1.5px solid var(--line);background:#fff;
+  border-radius:99px;padding:9px 16px;font-size:13.5px;font-weight:700;color:var(--soft);transition:.14s}
+.aba .n{background:#EFEAE2;color:var(--soft);border-radius:99px;min-width:21px;padding:1px 7px;font-size:11.5px;font-weight:800}
+.aba.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.aba.on .n{background:rgba(255,255,255,.22);color:#fff}
+.aba.tem-novo{border-color:var(--novo);background:var(--novo-bg);color:#8a5f14}
+.aba.tem-novo .n{background:var(--novo);color:#3a2408}
+.aba.on.tem-novo{background:var(--novo);color:#3a2408;border-color:var(--novo)}
+.aba.on.tem-novo .n{background:rgba(0,0,0,.18);color:#3a2408}
+
+.busca{max-width:1120px;margin:0 auto;padding:4px 15px 0}
+.busca input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff}
+.busca input:focus{outline:none;border-color:var(--novo)}
+
+main{max-width:1120px;margin:0 auto;padding:14px 15px 20px}
+.lista{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:760px){.lista{grid-template-columns:1fr 1fr}}
+
+/* ---------- CARD DO PEDIDO ---------- */
+.pd{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;
+  border-left:5px solid var(--fim);transition:.16s}
+.pd.s-novo{border-left-color:var(--novo)}
+.pd.s-preparo{border-left-color:var(--preparo)}
+.pd.s-pronto{border-left-color:var(--pronto)}
+.pd.piscando{animation:chama 1.5s ease-in-out infinite;border-left-color:var(--novo)}
+@keyframes chama{0%,100%{box-shadow:0 4px 16px rgba(50,35,25,.07)}50%{box-shadow:0 0 0 4px rgba(232,163,61,.35),0 4px 20px rgba(232,163,61,.3)}}
+.pd-h{display:flex;align-items:flex-start;gap:11px;padding:14px 15px;cursor:pointer}
+.pd-h .dot{width:11px;height:11px;border-radius:50%;flex:none;margin-top:5px;background:var(--fim)}
+.s-novo .pd-h .dot{background:var(--novo)}
+.s-preparo .pd-h .dot{background:var(--preparo)}
+.s-pronto .pd-h .dot{background:var(--pronto)}
+.pd-h .tt{flex:1;min-width:0}
+.pd-h .tt b{font-size:16.5px;font-weight:800;display:block}
+.pd-h .tt .sub{font-size:12.5px;color:var(--soft);margin-top:3px}
+.pd-h .rt{text-align:right;flex:none}
+.pd-h .rt .vl{font-size:17px;font-weight:800;white-space:nowrap}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 10px;font-size:11.5px;font-weight:700;margin-top:6px}
+.tag.ent{background:var(--preparo-bg);color:var(--preparo)}
+.tag.ret{background:#F3EFE9;color:#6d6259}
+.seta{color:var(--soft);font-size:15px;transition:.2s;flex:none;margin-top:3px}
+.pd.aberto .seta{transform:rotate(180deg)}
+
+.pd-b{display:none;padding:0 15px 15px;border-top:1px dashed var(--line);margin-top:2px;padding-top:13px}
+.pd.aberto .pd-b{display:block}
+
+.fone{display:flex;align-items:center;gap:10px;background:#FAF8F5;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:11px}
+.fone .num{flex:1;font-size:14.5px;font-weight:600;letter-spacing:.2px}
+.zap-btn{background:var(--zap);color:#fff;width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;transition:.14s}
+.zap-btn:hover{filter:brightness(.94)}
+.zap-btn svg{width:22px;height:22px;fill:#fff}
+.end{display:flex;gap:8px;font-size:13.5px;color:var(--soft);line-height:1.5;margin-bottom:12px}
+.end b{color:var(--ink);font-weight:600}
+
+.itens{border-top:1px solid var(--line);padding-top:11px}
+.it{display:flex;gap:11px;padding:8px 0;border-bottom:1px solid #F2EEE8}
+.it:last-child{border-bottom:none}
+.it .q{background:#EFEAE2;color:var(--ink);font-weight:800;font-size:12.5px;border-radius:8px;min-width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;flex:none;padding:0 6px}
+.it .nm{flex:1;min-width:0}
+.it .nm b{font-size:14.5px;font-weight:700;display:block}
+.it .nm .cfg{font-size:12.5px;color:var(--soft);margin-top:2px;line-height:1.45}
+.it .nm .obs{font-size:12.5px;color:#9a5b12;background:#FFF6E8;border-radius:7px;padding:4px 8px;margin-top:5px;display:inline-block}
+.it .vl{font-weight:700;font-size:14px;white-space:nowrap}
+
+.somas{margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+.sm{display:flex;justify-content:space-between;font-size:13.5px;color:var(--soft);margin:4px 0}
+.sm.desc{color:var(--pronto);font-weight:600}
+.sm.tot{color:var(--ink);font-weight:800;font-size:18px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.pag{display:inline-flex;align-items:center;gap:6px;background:#F3EFE9;border-radius:9px;padding:6px 11px;font-size:12.5px;font-weight:700;margin-top:10px}
+
+.acoes{display:flex;gap:9px;margin-top:14px}
+.ac{flex:1;border-radius:12px;padding:14px;font-weight:800;font-size:15px;text-align:center;transition:.14s}
+.ac:active{transform:scale(.98)}
+.ac-p{background:var(--ink);color:#fff}
+.ac-p:hover{background:#000}
+.ac-g{background:#fff;border:1.5px solid var(--line);color:var(--soft);flex:0 0 auto;padding:14px 18px}
+.ac-g:hover{border-color:#cfc7bb;color:var(--ink)}
+.ac-ok{background:var(--pronto);color:#fff}
+.ac-prep{background:var(--preparo);color:#fff}
+
+.vazio{text-align:center;padding:60px 24px;color:var(--soft);grid-column:1/-1}
+.vazio .em{font-size:46px;margin-bottom:12px;opacity:.55}
+.vazio b{display:block;color:var(--ink);font-size:16.5px;margin-bottom:5px}
+
+/* ---------- ALERTA DE SOM ---------- */
+.somOff{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:80;width:min(94%,540px);
+  background:var(--ink);color:#fff;border-radius:14px;padding:14px 16px;display:none;align-items:center;gap:12px;
+  box-shadow:0 12px 34px rgba(0,0,0,.32)}
+.somOff.on{display:flex}
+.somOff .tx{flex:1;font-size:13.5px;line-height:1.45}
+.somOff .tx b{display:block;font-size:14.5px;margin-bottom:2px}
+.somOff button{background:var(--novo);color:#3a2408;font-weight:800;border-radius:10px;padding:11px 16px;font-size:14px;flex:none}
+
+.tst{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(22px);z-index:95;background:var(--ink);color:#fff;
+  padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.24s;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.erro{max-width:1120px;margin:0 auto 12px;background:#FDF0EE;border:1px solid #F3D9D4;color:#8b3226;
+  border-radius:12px;padding:12px 15px;font-size:13.5px;display:none}
+.erro.on{display:block}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="mk">
+      <img id="tLogo" src="apple-touch-icon.png" alt="">
+      <div>
+        <b id="tNome">Carregando…</b>
+        <small><span class="live"></span><span id="tStatus">conectando…</span></small>
+      </div>
+    </div>
+    <button class="ic-btn" id="btnSom" onclick="alternarSom()" title="Som de aviso">🔔</button>
+    <button class="ic-btn" onclick="location.href='admin.html'" title="Configurar loja">⚙️</button>
+  </div>
+</header>
+
+<div class="abas"><div class="abas-in" id="abas"></div></div>
+<div class="busca"><input id="busca" placeholder="Buscar por nome, código, telefone ou item…" oninput="pintar()"></div>
+
+<main>
+  <div class="erro" id="erro"></div>
+  <div class="lista" id="lista"></div>
+</main>
+
+<div class="somOff" id="somOff">
+  <div class="tx"><b>Ative o aviso sonoro</b>Toque uma vez para o navegador deixar tocar o alerta quando entrar pedido.</div>
+  <button onclick="ligarSom()">Ativar</button>
+</div>
+
+<div class="tst" id="tst"></div>
+
+<script src="nuvem.js"></script>
+<script>
+/* ==================================================================
+   PAINEL DE PEDIDOS
+   Atualiza sozinho a cada poucos segundos. Quando entra pedido novo,
+   toca o alerta e destaca o card até alguém aceitar.
+================================================================== */
+
+const ABAS = [
+  {id:"novo",    t:"Novos",       cor:"novo"},
+  {id:"preparo", t:"Em preparo",  cor:"preparo"},
+  {id:"pronto",  t:"Prontos",     cor:"pronto"},
+  {id:"fim",     t:"Finalizados", cor:"fim"},
+];
+const PROXIMO = { novo:"preparo", preparo:"pronto", pronto:"entregue" };
+const ROTULO_ACAO = { novo:"Aceitar pedido", preparo:"Marcar como pronto", pronto:"Marcar como entregue" };
+
+const MSG_PADRAO = {
+  preparo:  "Oi {nome}! Recebemos seu pedido {codigo} e já colocamos na chapa. 🍔",
+  pronto:   "{nome}, seu pedido {codigo} está pronto! {entrega}",
+  entregue: "Pedido {codigo} entregue. Valeu pela preferência! 🙏",
+  recusado: "Oi {nome}, não vamos conseguir atender o pedido {codigo} agora. Desculpa!"
+};
+
+let PEDIDOS = [];
+let LOJA = {};
+let aba = "novo";
+let abertos = {};
+let vistos = new Set(JSON.parse(localStorage.getItem("bb_vistos") || "[]"));
+let somLigado = localStorage.getItem("bb_som") !== "0";
+let audioOk = false, ctx = null, alarmeAtivo = false, tituloOriginal = document.title;
+
+const brl = v => "R$ " + (Number(v)||0).toFixed(2).replace(".",",");
+const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+let tt; function toast(m){ const t=document.getElementById("tst"); t.textContent=m; t.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("on"),2200); }
+
+function faz(min){
+  if(min<1) return "agora";
+  if(min<60) return `há ${Math.round(min)} min`;
+  const h=Math.floor(min/60); return `há ${h}h${String(Math.round(min%60)).padStart(2,"0")}`;
+}
+
+/* ==================================================================
+   SOM — alerta longo, repetido, que só para quando alguém atende
+================================================================== */
+function ligarSom(){
+  try{
+    ctx = ctx || new (window.AudioContext||window.webkitAudioContext)();
+    ctx.resume();
+    audioOk = true;
+    document.getElementById("somOff").classList.remove("on");
+    tocarAlerta(1); // amostra curta pra confirmar que funciona
+    toast("Som ativado");
+  }catch(e){ toast("Este navegador não deixou ativar o som"); }
+}
+function alternarSom(){
+  somLigado = !somLigado;
+  localStorage.setItem("bb_som", somLigado?"1":"0");
+  document.getElementById("btnSom").classList.toggle("mudo", !somLigado);
+  document.getElementById("btnSom").textContent = somLigado ? "🔔" : "🔕";
+  if(somLigado){ if(!audioOk) ligarSom(); else { tocarAlerta(1); toast("Som ligado"); } }
+  else { pararAlarme(); toast("Som desligado"); }
+}
+
+/* Uma "badalada" com corpo — duas vozes afinadas + brilho, com cauda longa. */
+function badalada(t0, base){
+  const g = ctx.createGain();
+  g.connect(ctx.destination);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.55, t0 + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.15);
+
+  [[base,0.9,"sine"],[base*2,0.42,"sine"],[base*2.997,0.16,"triangle"]].forEach(([f,v,tipo])=>{
+    const o = ctx.createOscillator(), og = ctx.createGain();
+    o.type = tipo; o.frequency.setValueAtTime(f, t0);
+    og.gain.setValueAtTime(v, t0);
+    og.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.1);
+    o.connect(og); og.connect(g);
+    o.start(t0); o.stop(t0 + 1.2);
+  });
+}
+
+/* Ciclo completo: ding-dong-ding subindo, ~2,6s. */
+function cicloAlerta(t0){
+  badalada(t0,        784);  // sol
+  badalada(t0 + 0.34, 988);  // si
+  badalada(t0 + 0.68, 1319); // mi agudo
+  badalada(t0 + 1.5,  988);
+  badalada(t0 + 1.84, 1319);
+}
+
+function tocarAlerta(ciclos){
+  if(!ctx || !somLigado) return;
+  const n = ciclos || 4;                  // 4 ciclos ≈ 10 segundos
+  const t = ctx.currentTime + 0.05;
+  for(let i=0;i<n;i++) cicloAlerta(t + i*2.6);
+  if(navigator.vibrate) navigator.vibrate([400,180,400,180,600]);
+}
+
+let timerAlarme = null;
+function iniciarAlarme(){
+  if(alarmeAtivo) return;
+  alarmeAtivo = true;
+  tocarAlerta(4);
+  // insiste a cada 20s enquanto houver pedido novo sem atender
+  timerAlarme = setInterval(()=>{ if(contar("novo")>0) tocarAlerta(4); else pararAlarme(); }, 20000);
+  piscarTitulo();
+  notificar();
+}
+function pararAlarme(){
+  alarmeAtivo = false;
+  clearInterval(timerAlarme); timerAlarme = null;
+  clearInterval(timerTitulo); timerTitulo = null;
+  document.title = tituloOriginal;
+}
+let timerTitulo = null;
+function piscarTitulo(){
+  if(timerTitulo) return;
+  let a = false;
+  timerTitulo = setInterval(()=>{
+    const n = contar("novo");
+    if(!n){ document.title = tituloOriginal; clearInterval(timerTitulo); timerTitulo=null; return; }
+    document.title = (a = !a) ? `🔔 (${n}) PEDIDO NOVO!` : tituloOriginal;
+  }, 900);
+}
+function notificar(){
+  try{
+    if(!("Notification" in window)) return;
+    if(Notification.permission === "granted"){
+      new Notification("Pedido novo!", { body:"Entrou um pedido no painel.", icon:"icon-192.png", tag:"pedido" });
+    } else if(Notification.permission !== "denied"){
+      Notification.requestPermission();
+    }
+  }catch(e){}
+}
+
+/* ==================================================================
+   DADOS
+================================================================== */
+async function carregar(primeira){
+  try{
+    const antes = new Set(PEDIDOS.map(p=>p.id));
+    const [loja, lista] = await Promise.all([
+      primeira ? NUVEM.carregarCardapio() : Promise.resolve(null),
+      NUVEM.listarPedidos()
+    ]);
+    if(loja) { LOJA = loja.dados || {}; aplicarLoja(); }
+    PEDIDOS = lista || [];
+    document.getElementById("erro").classList.remove("on");
+    document.getElementById("tStatus").textContent = "atualizado " + new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+
+    if(!primeira){
+      const novos = PEDIDOS.filter(p => p.status==="novo" && !antes.has(p.id));
+      if(novos.length) iniciarAlarme();
+    } else if(contar("novo") > 0){
+      iniciarAlarme();
+    }
+    pintar();
+  }catch(e){
+    const el = document.getElementById("erro");
+    el.textContent = "Sem conexão com o servidor. Tentando de novo… (" + e.message + ")";
+    el.classList.add("on");
+    document.getElementById("tStatus").textContent = "sem conexão";
+  }
+}
+function aplicarLoja(){
+  const L = LOJA.loja || {};
+  document.getElementById("tNome").textContent = L.nome || "Minha Loja";
+  if(L.logo) document.getElementById("tLogo").src = L.logo;
+  const c = LOJA.cores || {};
+  if(c.principal) document.documentElement.style.setProperty("--novo", c.destaque || c.principal);
+}
+
+/* ==================================================================
+   AÇÕES
+================================================================== */
+function daAba(p){ return (p.status==="entregue"||p.status==="recusado") ? "fim" : p.status; }
+function contar(id){ return PEDIDOS.filter(p=>daAba(p)===id).length; }
+
+async function avancar(id){
+  const p = PEDIDOS.find(x=>x.id===id); if(!p) return;
+  const novo = PROXIMO[p.status]; if(!novo) return;
+  p.status = novo; pintar();
+  if(novo!=="novo") { vistos.add(id); localStorage.setItem("bb_vistos", JSON.stringify([...vistos])); }
+  if(contar("novo")===0) pararAlarme();
+  try{
+    await NUVEM.mudarStatus(id, novo);
+    toast(novo==="preparo"?"Pedido aceito":novo==="pronto"?"Pedido pronto":"Pedido entregue");
+    if(msgDe(novo)) perguntarZap(p, novo);
+  }catch(e){ toast("Não consegui salvar. Confira a internet."); carregar(false); }
+}
+async function recusar(id){
+  if(!confirm("Recusar este pedido?")) return;
+  const p = PEDIDOS.find(x=>x.id===id); if(!p) return;
+  p.status = "recusado"; pintar();
+  if(contar("novo")===0) pararAlarme();
+  try{ await NUVEM.mudarStatus(id,"recusado"); toast("Pedido recusado"); if(msgDe("recusado")) perguntarZap(p,"recusado"); }
+  catch(e){ toast("Não consegui salvar."); carregar(false); }
+}
+function abrir(id){ abertos[id] = !abertos[id]; pintar(); }
+
+/* ---------- WhatsApp com mensagem pronta por status ---------- */
+function msgDe(status){
+  const cfg = (LOJA.mensagens||{});
+  return cfg[status] !== undefined ? cfg[status] : MSG_PADRAO[status];
+}
+function montarMsg(p, status){
+  const txt = msgDe(status) || "";
+  const entrega = p.tipo==="entrega" ? "Já vai sair para entrega. 🛵" : "Pode vir buscar no balcão. 🏠";
+  return txt.replace(/{nome}/g, (p.cliente||"").split(" ")[0])
+            .replace(/{codigo}/g, "#"+p.codigo)
+            .replace(/{total}/g, brl(p.total))
+            .replace(/{entrega}/g, entrega);
+}
+function zap(id, status){
+  const p = PEDIDOS.find(x=>x.id===id); if(!p) return;
+  const fone = String(p.telefone||"").replace(/\D/g,"");
+  const num = fone.length<=11 ? "55"+fone : fone;
+  const msg = status ? montarMsg(p, status) : "";
+  window.open(`https://wa.me/${num}` + (msg?`?text=${encodeURIComponent(msg)}`:""), "_blank");
+}
+function perguntarZap(p, status){
+  const t = document.getElementById("tst");
+  t.innerHTML = `Avisar ${esc((p.cliente||"").split(" ")[0])} no WhatsApp?
+    <button style="margin-left:10px;background:var(--zap);color:#fff;font-weight:800;border-radius:9px;padding:7px 13px"
+      onclick="zap('${p.id}','${status}');document.getElementById('tst').classList.remove('on')">Enviar</button>`;
+  t.classList.add("on");
+  clearTimeout(tt); tt = setTimeout(()=>t.classList.remove("on"), 8000);
+}
+
+/* ==================================================================
+   TELA
+================================================================== */
+function pintar(){
+  document.getElementById("abas").innerHTML = ABAS.map(a=>{
+    const n = contar(a.id);
+    const alerta = a.id==="novo" && n>0;
+    return `<button class="aba ${aba===a.id?"on":""} ${alerta?"tem-novo":""}" onclick="aba='${a.id}';pintar()">
+      ${a.t}${n?`<span class="n">${n}</span>`:""}</button>`;
+  }).join("");
+
+  const q = document.getElementById("busca").value.trim().toLowerCase();
+  let lista = PEDIDOS.filter(p=>daAba(p)===aba);
+  if(q) lista = lista.filter(p =>
+    (p.cliente||"").toLowerCase().includes(q) ||
+    (p.codigo||"").toLowerCase().includes(q) ||
+    (p.telefone||"").includes(q) ||
+    (p.itens||[]).some(i=>(i.nome||"").toLowerCase().includes(q)));
+
+  const el = document.getElementById("lista");
+  if(!lista.length){
+    const vaz = {
+      novo:["🔔","Nenhum pedido novo","Quando entrar pedido, ele aparece aqui e toca o alerta."],
+      preparo:["👨‍🍳","Nada em preparo","Os pedidos aceitos aparecem aqui."],
+      pronto:["✅","Nenhum pedido pronto","Quando marcar como pronto, cai nesta aba."],
+      fim:["📦","Nenhum pedido finalizado hoje","Entregues e recusados ficam aqui."]
+    }[aba];
+    el.innerHTML = `<div class="vazio"><div class="em">${vaz[0]}</div><b>${vaz[1]}</b>${vaz[2]}</div>`;
+    return;
+  }
+  el.innerHTML = lista.map(card).join("");
+}
+
+function card(p){
+  const min = (Date.now() - new Date(p.criado_em).getTime())/60000;
+  const hora = new Date(p.criado_em).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  const qtdItens = (p.itens||[]).reduce((s,i)=>s+(i.qty||1),0);
+  const aberto = !!abertos[p.id];
+  const piscando = p.status==="novo";
+  const e = p.endereco || {};
+  const temEnd = p.tipo==="entrega" && (e.rua||e.bairro);
+
+  return `<div class="pd s-${p.status} ${aberto?"aberto":""} ${piscando?"piscando":""}">
+    <div class="pd-h" onclick="abrir('${p.id}')">
+      <span class="dot"></span>
+      <div class="tt">
+        <b>${esc(p.cliente)}</b>
+        <div class="sub">#${esc(p.codigo)} · ${hora} · ${faz(min)} · ${qtdItens} ${qtdItens>1?"itens":"item"}</div>
+      </div>
+      <div class="rt">
+        <div class="vl">${brl(p.total)}</div>
+        <span class="tag ${p.tipo==="entrega"?"ent":"ret"}">${p.tipo==="entrega"?"🛵 Entrega":"🏠 Retirada"}</span>
+      </div>
+      <span class="seta">▾</span>
+    </div>
+
+    <div class="pd-b">
+      <div class="fone">
+        <span>📞</span><span class="num">${esc(p.telefone)}</span>
+        <button class="zap-btn" onclick="event.stopPropagation();zap('${p.id}','${p.status==='novo'?'':p.status}')" title="Falar no WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.6 14.2c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.5.1.3.7 1.1 1.5 1.8 1 .9 1.8 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.5-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.1Z"/></svg>
+        </button>
+      </div>
+      ${temEnd?`<div class="end"><span>📍</span><div><b>${esc(e.rua)}, ${esc(e.num)}</b>${e.comp?" — "+esc(e.comp):""}<br>
+        ${esc(e.bairro)}${e.ref?`<br><span style="font-size:12.5px">Referência: ${esc(e.ref)}</span>`:""}</div></div>`:""}
+
+      <div class="itens">
+        ${(p.itens||[]).map(i=>`<div class="it">
+          <span class="q">${i.qty||1}×</span>
+          <div class="nm"><b>${esc(i.nome)}</b>
+            ${i.detalhes?`<div class="cfg">${esc(i.detalhes)}</div>`:""}
+            ${i.obs?`<div class="obs">📝 ${esc(i.obs)}</div>`:""}</div>
+          <span class="vl">${brl(i.preco)}</span>
+        </div>`).join("")}
+      </div>
+
+      <div class="somas">
+        <div class="sm"><span>Subtotal</span><span>${brl(p.subtotal)}</span></div>
+        ${p.desconto>0?`<div class="sm desc"><span>Cupom ${esc(p.cupom||"")}</span><span>− ${brl(p.desconto)}</span></div>`:""}
+        ${p.tipo==="entrega"?`<div class="sm"><span>Taxa de entrega</span><span>${p.taxa>0?brl(p.taxa):"Grátis"}</span></div>`:""}
+        ${p.gorjeta>0?`<div class="sm"><span>Gorjeta</span><span>${brl(p.gorjeta)}</span></div>`:""}
+        <div class="sm tot"><span>Total</span><span>${brl(p.total)}</span></div>
+        ${p.pagamento?`<div class="pag">💳 ${esc(p.pagamento)}${p.troco?` · troco p/ ${esc(p.troco)}`:""}</div>`:""}
+      </div>
+
+      ${PROXIMO[p.status]?`<div class="acoes">
+        <button class="ac ${p.status==='novo'?'ac-p':p.status==='preparo'?'ac-prep':'ac-ok'}" onclick="avancar('${p.id}')">
+          ${ROTULO_ACAO[p.status]}</button>
+        ${p.status==='novo'?`<button class="ac ac-g" onclick="recusar('${p.id}')">Recusar</button>`:""}
+      </div>`:`<div class="acoes"><button class="ac ac-g" style="flex:1" disabled
+        >${p.status==="entregue"?"✅ Entregue":"✖ Recusado"}</button></div>`}
+    </div>
+  </div>`;
+}
+
+/* ==================================================================
+   INICIAR
+================================================================== */
+document.getElementById("btnSom").textContent = somLigado ? "🔔" : "🔕";
+document.getElementById("btnSom").classList.toggle("mudo", !somLigado);
+if(somLigado) document.getElementById("somOff").classList.add("on");
+
+carregar(true);
+setInterval(()=>carregar(false), 6000);   // busca pedidos novos a cada 6s
+setInterval(pintar, 30000);               // atualiza o "há X min"
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) carregar(false); });
+</script>
+</body>
+</html>

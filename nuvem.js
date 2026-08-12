@@ -26,6 +26,7 @@ const NUVEM = (() => {
 
   async function req(caminho, opcoes = {}) {
     const r = await fetch(URL_BASE + "/rest/v1/" + caminho, {
+      keepalive: true, // sobrevive mesmo se a página for trocada (ex: redirecionar pro WhatsApp) logo em seguida
       ...opcoes,
       headers: cab(opcoes.headers)
     });

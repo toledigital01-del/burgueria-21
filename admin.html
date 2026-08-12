@@ -15,6 +15,8 @@
 :root{
   --bg:#F6F4F1; --panel:#fff; --line:#E7E2DA; --ink:#221C19; --soft:#7B6E63;
   --brand:#C0392B; --brand-d:#8E2A20; --gold:#E8A33D; --ok:#3E8E4E; --okbg:#EDF6EE;
+  --warnbg:#FDF0EE; --warnline:#F6DCD8; --warnink:#7a3229;
+  --okline:#BFE0C6; --okink:#2c5c39;
   --r:14px; --sh:0 6px 20px rgba(60,40,30,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -142,8 +144,9 @@ h1,h2,h3{line-height:1.25}
 /* ---------- LAYOUT ---------- */
 .wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:238px 1fr;gap:20px;padding:20px 16px 120px}
 @media(max-width:860px){.wrap{grid-template-columns:1fr;padding-bottom:96px}}
-.side{position:sticky;top:74px;align-self:start;display:flex;flex-direction:column;gap:4px}
-@media(max-width:860px){.side{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:45;flex-direction:row;overflow-x:auto;background:#fff;border-top:1px solid var(--line);padding:6px;gap:2px;scrollbar-width:none}
+#main{min-width:0}
+.side{position:sticky;top:74px;align-self:stretch;min-height:calc(100vh - 74px);display:flex;flex-direction:column;gap:4px}
+@media(max-width:860px){.side{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:45;flex-direction:row;overflow-x:auto;background:#fff;border-top:1px solid var(--line);padding:6px;gap:2px;scrollbar-width:none;align-self:auto;min-height:0}
  .side::-webkit-scrollbar{display:none}}
 .nav-i{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:11px;font-size:14px;font-weight:600;color:var(--soft);text-align:left;transition:.13s;white-space:nowrap}
 .nav-i .ic{font-size:17px;line-height:1}
@@ -236,7 +239,13 @@ textarea.in{min-height:104px;resize:vertical;line-height:1.55}
 .li .tx small{display:block;font-size:12px;color:var(--soft);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .li .pr{font-weight:800;font-size:14.5px;white-space:nowrap}
 .li .ax{display:flex;gap:5px;flex:none}
-.ib{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:14px;color:var(--soft);display:flex;align-items:center;justify-content:center}
+.ib{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:14px;color:var(--soft);display:flex;align-items:center;justify-content:center;flex:none}
+@media(max-width:420px){
+  .li{padding:9px 10px;gap:9px}
+  .li .ax{gap:3px}
+  .ib{width:27px;height:27px;font-size:12px}
+  .li .pr{font-size:13px}
+}
 .ib:hover{background:#F3EFE9;color:var(--ink)}
 .ib.del:hover{background:#fdf0ee;color:var(--brand);border-color:#f6dcd8}
 .grp{margin-bottom:22px}
@@ -329,9 +338,41 @@ textarea.in{min-height:104px;resize:vertical;line-height:1.55}
 .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;
   background:var(--ink);color:#fff;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .steps li b{color:var(--ink)}
+
+/* ==================================================================
+   TEMA FLUXYA — pré-visualização, ligado via class="tema-fluxya" no <body>.
+   Só a barra lateral fica escura (igual ao pedeai.io) — o conteúdo
+   continua claro. Cor de destaque troca de vermelho pra azul Fluxya.
+   Pra voltar ao tema original: tire a classe do <body>.
+================================================================== */
+body.tema-fluxya{
+  --brand:#1D4ED8; --brand-d:#1739A6; --brand-grad:linear-gradient(135deg,#3B82F6,#1638B2); --gold:#38BDF8;
+  --side-bg:#0E1424; --side-line:#1F2A45; --side-ink:#C7CEE0; --side-soft:#7C87A6;
+}
+/* teste: o círculo/realce laranja (tour, badge de pendência, barra de progresso) vira azul */
+body.tema-fluxya .nav-i .pend{color:#06283D}
+body.tema-fluxya .tour-hole{box-shadow:0 0 0 9999px rgba(10,18,30,.55)}
+body.tema-fluxya .side{background:var(--side-bg)}
+@media(min-width:861px){body.tema-fluxya .side{border-radius:14px;padding:10px;margin-bottom:20px}}
+body.tema-fluxya .nav-i{color:var(--side-soft)}
+body.tema-fluxya .nav-i:hover{background:rgba(59,130,246,.08);color:var(--side-ink)}
+body.tema-fluxya .nav-i.on{background:var(--brand-grad);color:#fff;box-shadow:0 4px 14px rgba(29,78,216,.35)}
+body.tema-fluxya .top .mark img{box-shadow:0 0 0 2px rgba(29,78,216,.15)}
+body.tema-fluxya .btn-p{background:var(--brand-grad)}
+body.tema-fluxya .btn-p:hover{filter:brightness(1.08)}
+body.tema-fluxya .nav-i.on .ic{filter:drop-shadow(0 0 6px rgba(47,111,237,.5))}
+@media(max-width:860px){body.tema-fluxya .side{border-top-color:var(--side-line)}}
+body.tema-fluxya .estado{color:var(--ok)}
+body.tema-fluxya .in:focus{border-color:var(--brand)}
+body.tema-fluxya .subtab.on{background:#EEF3FE;border-color:var(--brand)}
+body.tema-fluxya .subtab.on .tt b{color:var(--brand-d)}
+body.tema-fluxya .subtab.on .tt small{color:#5C86E8}
+body.tema-fluxya .busca input:focus,
+body.tema-fluxya .aba.tem-novo{border-color:var(--brand)}
+body.tema-fluxya .ib.del:hover{color:var(--brand)}
 </style>
 </head>
-<body>
+<body class="tema-fluxya">
 
 <header class="top" id="top">
   <div class="top-in">
@@ -1172,10 +1213,10 @@ function telaPublicar(){
   <div class="card">
     <h2>${f===tot?"Tudo no ar 🚀":"Seu cardápio"}</h2>
     <div class="sub">Não precisa fazer nada para publicar: <b>tudo que você edita aqui vai pro ar sozinho</b>, em segundos.</div>
-    ${falta.length?`<div class="guia" style="background:#FDF0EE;border-color:#F6DCD8;color:#7a3229">
+    ${falta.length?`<div class="guia" style="background:var(--warnbg);border-color:var(--warnline);color:var(--warnink)">
       <span class="gi">⚠️</span><div><b>Ainda falta configurar:</b>
       <ul>${falta.map(t=>`<li>${t.t}</li>`).join("")}</ul></div></div>`
-    :`<div class="guia" style="background:var(--okbg);border-color:#BFE0C6;color:#2c5c39">
+    :`<div class="guia" style="background:var(--okbg);border-color:var(--okline);color:var(--okink)">
       <span class="gi">✅</span><div><b>Cardápio publicado e recebendo pedidos.</b>
       Toda alteração aparece pro cliente na hora.</div></div>`}
     <button class="btn btn-g" style="width:100%" onclick="publicarAgora().then(()=>toast('Cardápio republicado'))">
@@ -1766,7 +1807,7 @@ const PASSOS = [
     tit:"Sua loja está no ar",
     lead:"É isso. Seu cardápio já funciona e os pedidos vão cair no seu WhatsApp.",
     corpo:()=>`
-      <div class="guia" style="background:var(--okbg);border-color:#BFE0C6;color:#2c5c39"><span class="gi">✅</span><div>
+      <div class="guia" style="background:var(--okbg);border-color:var(--okline);color:var(--okink)"><span class="gi">✅</span><div>
         <b>${esc(DB.loja.nome)}</b> · ${DB.categorias.length} categoria(s) · ${DB.produtos.length} produto(s)</div></div>
       <div class="f"><label>E agora?</label>
         <ol class="steps">

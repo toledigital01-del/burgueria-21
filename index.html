@@ -646,13 +646,23 @@ function updateSend(){ const b=document.getElementById("sendBtn"); if(!b)return;
   b.disabled=!ok; }
 
 /* ===================== ENVIO WHATSAPP ===================== */
-function enviar(){
+async function enviar(){
   if(!order.tipo){toast("Escolha entrega ou retirada");return;}
   if(!order.nome.trim()){toast("Digite seu nome");return;}
   if(!order.tel.trim()){toast("Digite seu WhatsApp");return;}
   if(order.tipo==="entrega" && (!order.end.rua||!order.end.num||!order.end.bairro)){toast("Complete o endereço");return;}
   const codigo = codigoPedido();
-  saveClient(codigo); // manda pro painel da loja (toca o alerta lá)
+
+  /* Espera o pedido salvar no painel da loja ANTES de abrir o WhatsApp.
+     Sem isso, o celular às vezes troca de app rápido demais e cancela
+     o salvamento no meio do caminho. Espera no máximo 2s — se a internet
+     estiver ruim, manda pro WhatsApp assim mesmo (o pedido ali já vale). */
+  const btn = document.getElementById("sendBtn");
+  const txtOriginal = btn ? btn.innerHTML : "";
+  if(btn){ btn.disabled = true; btn.innerHTML = "Enviando…"; }
+  await Promise.race([ saveClient(codigo), new Promise(r=>setTimeout(r,2000)) ]);
+  if(btn){ btn.disabled = false; btn.innerHTML = txtOriginal; }
+
   const L=[];
   L.push(`*PEDIDO #${codigo} — ${CONFIG.nome}*`); L.push("");
   L.push(`*Cliente:* ${order.nome.trim()}`);
@@ -696,7 +706,7 @@ function codigoPedido(){
 }
 function saveClient(codigo){
   try{
-    NUVEM.enviarPedido({
+    return NUVEM.enviarPedido({
       codigo,
       cliente: order.nome.trim(),
       telefone: order.tel.trim(),

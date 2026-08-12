@@ -6,16 +6,17 @@
    cliente; o cliente faz o pedido no celular dele e cai no painel
    do dono na hora.
 
-   Não precisa mexer aqui.
+   Pra clonar esse projeto pra outro cliente, o único ajuste aqui
+   é trocar a <meta name="loja-slug"> no <head> de cada .html —
+   não precisa mexer neste arquivo.
 ================================================================== */
 
 const NUVEM = (() => {
   const URL_BASE = "https://emzecdpduqvdtqbmqwmk.supabase.co";
   const CHAVE = "sb_publishable_QyOMP2smMlDWT0HRHwQq3w_wuGsV6dj";
 
-  // Identificador da loja. Se um dia houver mais de uma loja no mesmo
-  // servidor, cada uma usa um slug diferente.
-  const LOJA = "burgueria-21";
+  // Identificador da loja — cada cliente tem o seu, lido do HTML.
+  const LOJA = document.querySelector('meta[name="loja-slug"]')?.content || "burgueria-21";
 
   const cab = (extra = {}) => ({
     "apikey": CHAVE,

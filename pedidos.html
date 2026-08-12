@@ -401,11 +401,14 @@ function zap(id, status){
   const msg = status ? montarMsg(p, status) : "";
   window.open(`https://wa.me/${num}` + (msg?`?text=${encodeURIComponent(msg)}`:""), "_blank");
 }
+/* O WhatsApp não deixa nenhum site mandar mensagem sozinho — isso aqui
+   só ABRE a conversa com o texto pronto. Falta um clique de verdade
+   dentro do WhatsApp pra sair. É assim em qualquer site, não só o nosso. */
 function perguntarZap(p, status){
   const t = document.getElementById("tst");
   t.innerHTML = `Avisar ${esc((p.cliente||"").split(" ")[0])} no WhatsApp?
     <button style="margin-left:10px;background:var(--zap);color:#fff;font-weight:800;border-radius:9px;padding:7px 13px"
-      onclick="zap('${p.id}','${status}');document.getElementById('tst').classList.remove('on')">Enviar</button>`;
+      onclick="zap('${p.id}','${status}');document.getElementById('tst').classList.remove('on')">Abrir WhatsApp</button>`;
   t.classList.add("on");
   clearTimeout(tt); tt = setTimeout(()=>t.classList.remove("on"), 8000);
 }

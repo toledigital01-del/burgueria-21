@@ -61,6 +61,19 @@ h1,h2,h3{line-height:1.25}
  .nav-i .ic{font-size:19px}.nav-i .pend{position:absolute;margin:0;transform:translate(16px,-6px)}}
 
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:20px;margin-bottom:16px}
+
+.subtabs{display:flex;gap:9px;overflow-x:auto;padding:0 20px 20px;scrollbar-width:none}
+.subtabs::-webkit-scrollbar{display:none}
+.subtab{flex:none;display:flex;align-items:center;gap:9px;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;
+  background:#FBFAF8;text-align:left;transition:.14s;min-width:158px}
+.subtab:hover{border-color:#d6cec2}
+.subtab .ic{font-size:17px;flex:none}
+.subtab .tt b{display:block;font-size:13.5px;font-weight:700;color:var(--ink)}
+.subtab .tt small{display:block;font-size:11px;color:var(--soft);margin-top:1px;white-space:nowrap}
+.subtab.on{background:#FFF8EC;border-color:var(--gold)}
+.subtab.on .tt b{color:#8a5f14}
+.subtab.on .tt small{color:#a3782a}
+@media(max-width:560px){.subtab{min-width:132px;padding:9px 11px}.subtab .tt small{white-space:normal}}
 .card>h2{font-size:19px;font-weight:800;margin-bottom:3px}
 .card>.sub{font-size:13.5px;color:var(--soft);line-height:1.5;margin-bottom:16px}
 
@@ -409,10 +422,10 @@ function pegarImagem(input, maxLado, cb){
    PROGRESSO DA CONFIGURAÇÃO
 ================================================================== */
 const TAREFAS = [
-  {id:"loja",  t:"Dados da loja",       d:"Nome, WhatsApp e endereço",            tela:"loja",       ok:()=>!!(DB.loja.nome && DB.loja.whatsapp)},
-  {id:"marca", t:"Logo e cores",        d:"Deixe com a cara da sua marca",        tela:"marca",      ok:()=>!!DB.loja.logo},
-  {id:"hora",  t:"Horário de atendimento", d:"Quando a loja abre e fecha",        tela:"horario",    ok:()=>DB.horario.dias.length>0},
-  {id:"ent",   t:"Entrega e pagamento", d:"Taxa, frete grátis e formas de pagar", tela:"entrega",    ok:()=>DB.entrega.ativa||DB.entrega.retirada},
+  {id:"loja",  t:"Dados da loja",       d:"Nome, WhatsApp e endereço",            tela:"config", sub:"geral",     ok:()=>!!(DB.loja.nome && DB.loja.whatsapp)},
+  {id:"marca", t:"Logo e cores",        d:"Deixe com a cara da sua marca",        tela:"config", sub:"marca",     ok:()=>!!DB.loja.logo},
+  {id:"hora",  t:"Horário de atendimento", d:"Quando a loja abre e fecha",        tela:"config", sub:"horarios",  ok:()=>DB.horario.dias.length>0},
+  {id:"ent",   t:"Entrega e pagamento", d:"Taxa, frete grátis e formas de pagar", tela:"config", sub:"entrega",   ok:()=>DB.entrega.ativa||DB.entrega.retirada},
   {id:"cat",   t:"Criar categorias",    d:"Ex: Burgers, Bebidas, Sobremesas",     tela:"categorias", ok:()=>DB.categorias.length>0},
   {id:"prod",  t:"Cadastrar produtos",  d:"No mínimo 3 pra loja não ficar vazia", tela:"produtos",   ok:()=>DB.produtos.length>=3},
   {id:"pub",   t:"Divulgar o cardápio", d:"Pegue o link e o QR Code da sua loja", tela:"publicar",   ok:()=>!!ONB.publicou},
@@ -424,25 +437,22 @@ const feitas = () => TAREFAS.filter(t=>t.ok()).length;
 ================================================================== */
 const MENUS = [
   {id:"inicio",     ic:"🏠", t:"Início"},
-  {id:"loja",       ic:"🏪", t:"Minha loja"},
-  {id:"marca",      ic:"🎨", t:"Marca e cores"},
   {id:"categorias", ic:"📂", t:"Categorias"},
   {id:"produtos",   ic:"🍔", t:"Produtos"},
   {id:"opcoes",     ic:"⚙️", t:"Opções e extras"},
-  {id:"horario",    ic:"🕐", t:"Horário"},
-  {id:"entrega",    ic:"🛵", t:"Entrega"},
+  {id:"config",     ic:"🔧", t:"Configurações"},
   {id:"publicar",   ic:"🚀", t:"Divulgar"},
 ];
 function pintarMenu(){
   document.getElementById("side").innerHTML = MENUS.map(m=>{
-    const tf = TAREFAS.find(t=>t.tela===m.id);
-    const pend = tf && !tf.ok() ? `<span class="pend">!</span>` : "";
+    const pend = TAREFAS.some(t=>t.tela===m.id && !t.ok());
     return `<button class="nav-i ${TELA===m.id?"on":""}" onclick="go('${m.id}')" style="position:relative">
-      <span class="ic">${m.ic}</span><span>${m.t}</span>${pend}</button>`;
+      <span class="ic">${m.ic}</span><span>${m.t}</span>${pend?`<span class="pend">!</span>`:""}</button>`;
   }).join("");
 }
-function go(t){
-  TELA=t; pintarMenu(); pintar(); window.scrollTo({top:0,behavior:"smooth"});
+function go(t, sub){
+  TELA=t; if(t==="config" && sub) configSub=sub;
+  pintarMenu(); pintar(); window.scrollTo({top:0,behavior:"smooth"});
   fecharTour();
   const fab = document.getElementById("tourFab");
   fab.classList.toggle("show", !!TOURS[t]);
@@ -452,11 +462,34 @@ function go(t){
 /* ==================================================================
    TELAS
 ================================================================== */
+let configSub = "geral";
+const CONFIG_SUBS = [
+  {id:"geral",     t:"Geral",      ic:"🏪", d:"Nome, WhatsApp, endereço"},
+  {id:"marca",     t:"Marca",      ic:"🎨", d:"Logo, cores, capa"},
+  {id:"horarios",  t:"Horários",   ic:"🕐", d:"Funcionamento por dia"},
+  {id:"entrega",   t:"Entrega",    ic:"🛵", d:"Modo, taxa de entrega"},
+  {id:"pagamento", t:"Pagamento",  ic:"💳", d:"Formas aceitas"},
+];
+function telaConfig(){
+  const render = {geral:telaLoja, marca:telaMarca, horarios:telaHorario, entrega:telaEntrega, pagamento:telaPagamento}[configSub] || telaLoja;
+  return `
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:20px 20px 16px">
+      <h2 style="margin-bottom:3px">Configurações</h2>
+      <div class="sub" style="margin-bottom:0">Personalize sua loja e preferências operacionais.</div>
+    </div>
+    <div class="subtabs">
+      ${CONFIG_SUBS.map(s=>`<button class="subtab ${configSub===s.id?"on":""}" onclick="configSub='${s.id}';pintar()">
+        <span class="ic">${s.ic}</span><span class="tt"><b>${s.t}</b><small>${s.d}</small></span></button>`).join("")}
+    </div>
+  </div>
+  ${render()}`;
+}
 function pintar(){
   const m = document.getElementById("main");
   m.innerHTML = ({
-    inicio:telaInicio, loja:telaLoja, marca:telaMarca, categorias:telaCategorias,
-    produtos:telaProdutos, opcoes:telaOpcoes, horario:telaHorario, entrega:telaEntrega, publicar:telaPublicar
+    inicio:telaInicio, config:telaConfig, categorias:telaCategorias,
+    produtos:telaProdutos, opcoes:telaOpcoes, publicar:telaPublicar
   })[TELA]();
   pintarTopo();
 }
@@ -475,7 +508,7 @@ function telaInicio(){
     <div class="prog-t">${f} de ${tot} etapas concluídas · ${pct}%</div>
     <div style="margin-top:18px">
       ${TAREFAS.map(t=>`
-        <button class="ck ${t.ok()?"done":""}" onclick="go('${t.tela}')">
+        <button class="ck ${t.ok()?"done":""}" onclick="go('${t.tela}','${t.sub||""}')">
           <span class="bx">✓</span>
           <span class="tt"><b>${t.t}</b><small>${t.d}</small></span>
           <span class="go">›</span>
@@ -960,7 +993,7 @@ function telaHorario(){
 
 /* ---------- ENTREGA ---------- */
 function telaEntrega(){
-  const e=DB.entrega, g=DB.pagamento;
+  const e=DB.entrega;
   return `
   <div class="guia"><span class="gi">💡</span><div>
     <b>Frete grátis acima de um valor é o truque mais fácil pra vender mais.</b>
@@ -986,8 +1019,13 @@ function telaEntrega(){
         <input class="in" inputmode="decimal" value="${String(e.gratisAcima).replace(".",",")}" oninput="set('entrega.gratisAcima',num(this.value))">
         <div class="hint">Sugestão: um pouco acima do seu ticket médio.</div></div>
     </div>
-  </div>`:""}
+  </div>`:""}`;
+}
 
+/* ---------- PAGAMENTO ---------- */
+function telaPagamento(){
+  const g=DB.pagamento;
+  return `
   <div class="card">
     <h2>Formas de pagamento</h2>
     <div class="sub">O pagamento é combinado no WhatsApp. Aqui você só marca o que aceita.</div>
